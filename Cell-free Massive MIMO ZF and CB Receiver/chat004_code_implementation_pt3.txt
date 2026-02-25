@@ -1,0 +1,513 @@
+
+ ▐▛███▜▌   Claude Code v2.1.50
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    F:\Codes\Awesome-Wireless-Communications
+
+✻ Conversation compacted (ctrl+o for history)
+
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\main_fig2.m (91 lines)
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\compute_SE_ZF_montecarlo.m (77 lines)
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\compute_SE_ZF.m (63 lines)
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\compute_SE_CB.m (76 lines)
+  ⎿  Read C:\Users\acer\.claude\todos\23641fc2-4f32-412b-8c5b-8bcff56a0094-agent
+     -23641fc2-4f32-412b-8c5b-8bcff56a0094.json (1 lines)
+
+● I'll continue implementing Steps 10-13. Let me first read the necessary
+  context files.
+
+● Read 2 files (ctrl+o to expand)
+
+● Explore(Extract power control equations from paper)
+  ⎿  Done (14 tool uses · 67.5k tokens · 1m 46s)
+  (ctrl+o to expand)
+
+● Now let me read the detailed analysis document for the exact SCA/GP
+  formulations.
+
+● Searched for 4 patterns, read 1 file (ctrl+o to expand)
+
+● The analysis document is light on the exact SCA/GP equations. Let me read the
+  paper PDF directly to get the precise formulations.
+
+● Searched for 1 pattern, read 2 files (ctrl+o to expand)
+
+● Let me search for the Figure 3 description in the analysis and also check if
+  there's a Numerical Results section.
+
+● Searched for 2 patterns (ctrl+o to expand)
+
+● Now I have all the equations and context. Let me implement Steps 10-13. I'll
+  create all 5 files.
+
+● Read 1 file (ctrl+o to expand)
+
+● Good, I have all the context. Now let me write all 5 files.
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\main_fig3.m)
+  ⎿  Wrote 90 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\main_fig3.m
+     % main_fig3.m — Reproduce Figure 3: CDF of per-user spectral 
+     efficiency
+     %
+     % Paper: Zhang et al. (JCN, 2019), Section IV, Figure 3
+     %
+     % Plots the empirical CDF of per-user SE for ZF and CB receivers
+     % with equal power control (eta_k = 1), comparing:
+     %   - tau = 10 (orthogonal pilots, no pilot contamination since K = 
+     10)
+     %   - tau = 8  (pilot contamination, since tau < K)
+     %
+     % Fixed: M = 60, K = 10, N = 6.
+     … +80 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\power_control_SCA_ZF.m)
+  ⎿  Wrote 124 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\power_control_SCA_ZF.m
+     function eta = power_control_SCA_ZF(beta, alpha, pilot_index, p, R_bar)
+     %POWER_CONTROL_SCA_ZF Algorithm 1: SCA for ZF total rate maximization 
+     (Eq. 21-29).
+     %   eta = power_control_SCA_ZF(beta, alpha, pilot_index, p)
+     %   eta = power_control_SCA_ZF(beta, alpha, pilot_index, p, R_bar)
+     %
+     %   Eq. 21:  maximize    SUM_k R_k^ZF({eta_k})
+     %            subject to  R_k^ZF >= R_bar_k,  for all k   (QoS 
+     constraint)
+     %                        0 <= eta_k <= 1                  (power 
+     constraint)
+     %
+     %   where R_k^ZF = prelog * log2(1 + a_k * eta_k / D)  (Theorem 1, Eq. 
+     16)
+
+
+     … +114 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\power_control_SCA_CB.m)
+  ⎿  Wrote 123 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\power_control_SCA_CB.m
+     function eta = power_control_SCA_CB(beta, alpha, pilot_index, p, R_bar)
+     %POWER_CONTROL_SCA_CB Algorithm 3: SCA for CB total rate maximization 
+     (Eq. 36-43).
+     %   eta = power_control_SCA_CB(beta, alpha, pilot_index, p)
+     %   eta = power_control_SCA_CB(beta, alpha, pilot_index, p, R_bar)
+     %
+     %   Eq. 36:  maximize    SUM_k R_k^CB({eta_k})
+     %            subject to  R_k^CB >= R_bar_k,  for all k   (QoS 
+     constraint)
+     %                        0 <= eta_k <= 1                  (power 
+     constraint)
+     %
+     %   where R_k^CB = prelog * log2(1 + eta_k * S_k / D_k)  (Lemma 1, Eq. 
+     33)
+
+
+     … +113 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\power_control_GP_ZF.m)
+  ⎿  Wrote 93 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\power_control_GP_ZF.m
+     function eta = power_control_GP_ZF(beta, alpha, pilot_index, p, R_bar)
+     %POWER_CONTROL_GP_ZF Algorithm 2: GP for ZF single-user rate max (Eq. 
+     30-31).
+     %   eta = power_control_GP_ZF(beta, alpha, pilot_index, p)
+     %   eta = power_control_GP_ZF(beta, alpha, pilot_index, p, R_bar)
+     %
+     %   Eq. 30:  maximize    R_1^ZF
+     %            subject to  R_k^ZF >= R_bar_k,  k = 2,...,K   (QoS for 
+     others)
+     %                        0 <= eta_k <= 1                    (power)
+     %
+     %   ZF SINR (Eq. 16):
+     … +83 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\power_control_GP_CB.m)
+  ⎿  Wrote 95 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\power_control_GP_CB.m
+     function eta = power_control_GP_CB(beta, alpha, pilot_index, p, R_bar)
+     %POWER_CONTROL_GP_CB Algorithm 4: GP for CB single-user rate max (Eq. 
+     44-45).
+     %   eta = power_control_GP_CB(beta, alpha, pilot_index, p)
+     %   eta = power_control_GP_CB(beta, alpha, pilot_index, p, R_bar)
+     %
+     %   Eq. 44:  maximize    R_1^CB
+     %            subject to  R_k^CB >= R_bar_k,  k = 2,...,K   (QoS for 
+     others)
+     %                        0 <= eta_k <= 1                    (power)
+     %
+     %   CB SINR (Lemma 1, Eq. 33):
+     … +85 lines (ctrl+o to expand)
+
+● All 5 files are written. Now let me update the memory file and then provide
+  the detailed line-by-line explanations.
+
+● Recalled 1 memory, wrote 1 memory (ctrl+o to expand)
+
+● Now here are the detailed line-by-line explanations for each step:
+
+  ---
+  Step 10: main_fig3.m — CDF of Per-User Spectral Efficiency (Figure 3)
+
+  What this figure shows
+
+  Figure 3 plots the Cumulative Distribution Function (CDF) of per-user SE.
+  Unlike Figure 2 (which showed sum rate vs M), this figure shows how individual
+   user rates are distributed — revealing fairness and outage behavior. It
+  compares:
+  - ZF vs CB at tau=10 (orthogonal pilots, no contamination)
+  - ZF vs CB at tau=8 (pilot contamination since tau < K=10)
+
+  Line-by-line explanation
+
+  p = params();
+  tau_vec    = [10, 8];
+  num_setups = p.num_setups;
+  We test two pilot lengths: tau=10 means each of K=10 users gets a unique pilot
+   (no contamination). tau=8 forces 2 users to share pilots, creating pilot 
+  contamination.
+
+  for it = 1:length(tau_vec)
+      p.tau    = tau_vec(it);
+      p.prelog = 1 - p.tau / p.T;
+  The pre-log factor changes with tau. For tau=10: prelog = 1 - 10/200 = 0.95.
+  For tau=8: prelog = 1 - 8/200 = 0.96. Less pilot overhead means more data
+  time.
+
+      all_ZF = zeros(p.K, num_setups);
+      all_CB = zeros(p.K, num_setups);
+  We store per-user rates (K users x num_setups). For the CDF, we'll flatten
+  this into a single vector of K*num_setups = 1000 samples.
+
+          [beta, ~, ~] = generate_setup(p);
+          pilot_index = assign_pilots(p.K, p.tau);
+          [alpha, ~] = estimate_channel(beta, pilot_index, p);
+  Standard pipeline: generate network, assign pilots, compute MMSE parameters.
+  When tau=8, assign_pilots does random assignment (some users share pilots).
+
+          all_ZF(:, s) = compute_SE_ZF(beta, alpha, pilot_index, p);
+          all_CB(:, s) = compute_SE_CB(beta, alpha, pilot_index, p);
+  Closed-form SE for each user. Equal power control (eta_k = 1 by default).
+
+      rates_ZF{it} = all_ZF(:);
+  all_ZF(:) flattens the K x num_setups matrix into a single column — giving us
+  1000 per-user rate samples to build the CDF from.
+
+      [f_zf, x_zf] = ecdf(rates_ZF{it});
+      plot(x_zf, f_zf, '-',  'Color', colors{it}, 'LineWidth', 1.5);
+  MATLAB's ecdf computes the empirical CDF. x_zf = sorted rate values, f_zf =
+  corresponding cumulative probabilities. Solid lines = ZF, dashed lines = CB.
+  Blue = tau=10, red = tau=8.
+
+      zf_5  = prctile(rates_ZF{it}, 5);
+  The 5th percentile (5%-outage rate) is a key fairness metric: it's the rate
+  that 95% of users exceed. From the paper: ZF at tau=10 gives ~2.5 bits/s/Hz,
+  while dropping to tau=8 causes a dramatic drop.
+
+  ---
+  Step 11: power_control_SCA_ZF.m — Algorithm 1 (SCA for ZF Sum-Rate)
+
+  The optimization problem (Eq. 21)
+
+  $$\max_{{\eta_k}} \sum_{k=1}^{K} R_k^{ZF} \quad \text{s.t.} \quad R_k^{ZF}
+  \geq \bar{R}_k, \quad 0 \leq \eta_k \leq 1$$
+
+  Where from Theorem 1 (Eq. 16):
+
+  $$R_k^{ZF} = \left(1 - \frac{\tau}{T}\right) \log_2!\left(1 + \frac{\rho_u ,
+  \Omega(k) , \eta_k}{\rho_u \sum_{i=1}^K \eta_i c_i + 1}\right)$$
+
+  Why is this hard?
+
+  The sum of log-ratio functions is neither convex nor concave in {eta_k}.
+  Writing it as:
+
+  $$\sum_k R_k = \sum_k \underbrace{\log_2(a_k \eta_k + D)}{\text{concave in } 
+  \eta} - K \underbrace{\log_2(D)}{\text{concave in } \eta}$$
+
+  where $a_k = \rho_u \Omega_k$ and $D = \rho_u \sum_i \eta_i c_i + 1$, we see
+  it's difference of concave (DC) functions — NP-hard in general.
+
+  The SCA approach
+
+  At iteration n, linearize the subtracted concave term $g(\eta) = K \ln(D)$:
+
+  $$g(\eta) \approx g(\eta^{(n)}) + \nabla g(\eta^{(n)})^\top (\eta -
+  \eta^{(n)})$$
+
+  where $\frac{\partial g}{\partial \eta_j} = \frac{K \rho_u c_j}{D^{(n)}}$.
+
+  This gives a concave lower bound on the original objective. Maximizing this
+  lower bound yields the next iterate.
+
+  Line-by-line explanation
+
+      c_err = max(beta - alpha, [], 1).';       % K x 1
+  Eq. 17: $c_i = \max_m (\beta_{mi} - \alpha_{mi})$. The worst-case channel 
+  estimation error across all APs for user i. max(·, [], 1) takes the max over
+  rows (APs), giving a 1 x K row, then .' transposes to K x 1.
+
+      [~, dominant_ap] = max(beta, [], 1);      % 1 x K
+  Eq. 20: $m_j^* = \arg\max_m \beta_{mj}$. The AP with strongest channel to user
+   j. Used to build the set M_k.
+
+      for k = 1:K
+          excluded = dominant_ap([1:k-1, k+1:K]);
+          Mk = setdiff(1:M, excluded);
+  Eq. 19: $\mathcal{M}_k = {1,\ldots,M} \setminus {m_j^* : j \neq k}$. Exclude
+  the dominant AP of every other user. User k keeps its own dominant AP.
+
+          alpha_Mk = alpha(Mk, k);
+          S1 = sum(alpha_Mk);
+          S2 = sum(alpha_Mk.^2);
+          Omega_k = (p.N * S1^2 - S2) / S1;
+          a(k) = p.rho_u * Omega_k;
+  Eq. 18: $\Omega(k) = \frac{N \cdot S_1^2 - S_2}{S_1}$ where $S_1 = \sum_{m \in
+   \mathcal{M}k} \alpha{mk}$ and $S_2 = \sum_{m \in \mathcal{M}k} \alpha{mk}^2$.
+   Then $a_k = \rho_u \cdot \Omega(k)$ is the numerator coefficient for user k's
+   SINR.
+
+      gamma = 2.^(R_bar / p.prelog) - 1;
+  Convert QoS rate targets to SINR thresholds: $R_k \geq \bar{R}_k
+  \Leftrightarrow \text{SINR}_k \geq \gamma_k$ where $\gamma_k = 2^{\bar{R}_k /
+  \text{prelog}} - 1$.
+
+      eta = ones(K, 1);
+  Initial point: equal power control (all eta_k = 1). This is always feasible
+  when R_bar = 0.
+
+          D_n = p.rho_u * (c_err' * eta) + 1;
+  Evaluate denominator at current point: $D^{(n)} = \rho_u \sum_i \eta_i^{(n)}
+  c_i + 1$. This is a scalar since c_err' * eta is a dot product.
+
+          d = K * p.rho_u * c_err / D_n;
+  Gradient of the linearized term: $d_j = \frac{K \rho_u c_j}{D^{(n)}}$. These
+  are the coefficients of the affine penalty term in the subproblem.
+
+          cvx_begin quiet
+              variable eta_new(K, 1)
+              obj = -d' * eta_new;
+              for k = 1:K
+                  obj = obj + log(a(k) * eta_new(k) ...
+                              + p.rho_u * (c_err' * eta_new) + 1);
+              end
+              maximize(obj)
+  CVX subproblem: The objective is $\sum_k \ln(a_k \eta_k + D) - \mathbf{d}^\top
+   \boldsymbol{\eta}$. The first part is concave (log of affine), the second is
+  affine. Their sum is concave — valid for maximize in CVX.
+
+  Inside the log: a(k) * eta_new(k) + rho_u * (c_err' * eta_new) + 1 is the
+  quantity $a_k \eta_k + D = a_k \eta_k + \rho_u \sum_i \eta_i c_i + 1$ — the
+  numerator-plus-denominator of the SINR.
+
+                  for k = 1:K
+                      if gamma(k) > 0
+                          a(k) * eta_new(k) ...
+                              - gamma(k) * p.rho_u * (c_err' * eta_new) >=
+  gamma(k);
+                      end
+                  end
+  QoS constraint (linear): $\text{SINR}_k \geq \gamma_k \Leftrightarrow a_k
+  \eta_k \geq \gamma_k D \Leftrightarrow a_k \eta_k - \gamma_k \rho_u \sum_i
+  \eta_i c_i \geq \gamma_k$. This is an affine inequality in eta — always
+  convex.
+
+          if norm(eta_new - eta) < epsilon
+              eta = eta_new;
+              break;
+          end
+  Convergence check: stop when the power coefficients barely change. The paper
+  shows convergence in ~4 iterations (Fig. 5).
+
+  ---
+  Step 12: power_control_SCA_CB.m — Algorithm 3 (SCA for CB Sum-Rate)
+
+  The key difference from ZF
+
+  For CB (Lemma 1, Eq. 33), each user has its own denominator:
+
+  $$\text{SINR}k^{CB} = \frac{\eta_k \cdot S_k}{D_k}, \quad D_k = \sum{j=1}^K
+  \eta_j \cdot w_{jk} + \text{noise}_k$$
+
+  where:
+  - $S_k = |\mathbf{l}{kk}|^2 = \sum_m \alpha{mk}^2$ (Eq. 34 with i=k)
+  - $w_{jk}$ = interference weight from user j to user k
+  - $\text{noise}k = \sum_m \alpha{mk} / (N \rho_u)$
+
+  Line-by-line explanation (focusing on what's different from ZF)
+
+      S = sum(alpha.^2, 1).';
+  Signal power for each user: $S_k = |\mathbf{l}_{kk}|2^2 = \sum_m 
+  \alpha{mk}^2$. sum(·,1) sums over rows (APs).
+
+      w = zeros(K, K);
+      for k = 1:K
+          for i = 1:K
+              noncoh = sum(beta(:, i) .* alpha(:, k)) / p.N;
+  Eq. 35: Non-coherent interference weight: $|\boldsymbol{\theta}{ik}|^2/N = 
+  \frac{1}{N}\sum_m \beta{mi} \alpha_{mk}$. This is always present for every
+  (i,k) pair, including i=k (self non-coherent interference).
+
+              coh = 0;
+              if i ~= k && pilot_index(i) == pilot_index(k)
+                  l_ik = alpha(:, k) .* beta(:, i) ./ beta(:, k);
+                  coh = sum(l_ik.^2);
+              end
+  Eq. 34: Coherent interference: $|\mathbf{l}{ik}|^2$ only exists when $i \neq 
+  k$ AND users share the same pilot ($|\boldsymbol{\phi}k^H \boldsymbol{\phi}i| 
+  = 1$). The vector $\mathbf{l}{ik} = [\alpha{1k} \beta{1i}/\beta_{1k}, \ldots,
+  \alpha_{Mk} \beta_{Mi}/\beta_{Mk}]^\top$.
+
+              w(i, k) = coh + noncoh;
+  Total interference weight: $w_{ik} = |\mathbf{l}{ik}|^2 \cdot 
+  \mathbb{1}(\text{co-pilot}, i{\neq}k) + |\boldsymbol{\theta}{ik}|^2/N$.
+
+      noise = sum(alpha, 1).' / (p.N * p.rho_u);
+  Noise term: $\text{noise}k = \frac{|\mathbf{l}{kk}|1}{N \rho_u} = \frac{\sum_m
+   \alpha{mk}}{N \rho_u}$. Note ||l_kk||_1 (1-norm) vs ||l_kk||_2^2 (squared
+  2-norm) used in the signal.
+
+          D_n = w' * eta + noise;
+  Per-user denominators at current point: $D_k^{(n)} = \sum_j \eta_j^{(n)}
+  w_{jk} + \text{noise}_k$. This is K x 1 (one per user), unlike ZF where D was
+  a scalar. w' is K x K, so w' * eta gives a K x 1 vector.
+
+                  obj = obj + log(eta_new(k) * S(k) ...
+                              + w(:,k)' * eta_new + noise(k));
+                  obj = obj - w(:,k)' * eta_new / D_n(k);
+  Subproblem objective for user k:
+  - Concave part: $\ln(\eta_k S_k + D_k)$ where $D_k = \mathbf{w}_{:,k}^\top
+  \boldsymbol{\eta} + \text{noise}_k$
+  - Linearized penalty: $-\frac{\mathbf{w}_{:,k}^\top
+  \boldsymbol{\eta}}{D_k^{(n)}}$ (gradient of $-\ln(D_k)$ at $\eta^{(n)}$)
+
+  The key difference from ZF: each user k has its own denominator $D_k$ and its
+  own gradient term, whereas ZF had a single shared denominator.
+
+                          S(k) * eta_new(k) ...
+                              - gamma(k) * (w(:,k)' * eta_new) >= gamma(k) *
+  noise(k);
+  QoS constraint: $S_k \eta_k \geq \gamma_k D_k \Leftrightarrow S_k \eta_k -
+  \gamma_k \mathbf{w}_{:,k}^\top \boldsymbol{\eta} \geq \gamma_k \cdot
+  \text{noise}_k$. Still linear in eta.
+
+  ---
+  Step 13: GP Power Control — power_control_GP_ZF.m (Alg. 2) & 
+  power_control_GP_CB.m (Alg. 4)
+
+  The single-user optimization problem (Eq. 30/44)
+
+  $$\max_{{\eta_k}} R_1 \quad \text{s.t.} \quad R_k \geq \bar{R}_k \ (k \geq 2),
+   \quad 0 \leq \eta_k \leq 1$$
+
+  Maximize user 1's rate while all other users meet QoS. This is a Geometric 
+  Program (GP) — solvable globally (no iterations needed, unlike SCA).
+
+  The log-domain reformulation trick
+
+  Define $x_k = \ln(\eta_k)$, so $\eta_k = e^{x_k}$ and the power constraint
+  becomes $x_k \leq 0$.
+
+  For ZF (common denominator):
+
+  $$\ln(\text{SINR}k) = \ln(a_k) + x_k - \underbrace{\ln!\left(\rho_u \sum_i c_i
+   e^{x_i} + 1\right)}{\text{log-sum-exp} \to \text{convex}}$$
+
+  Since $\ln(D)$ is a log-sum-exp of affine functions of x — which is convex —
+  and we maximize affine minus convex = concave. This is a standard convex
+  problem!
+
+  For CB (per-user denominator):
+
+  $$\ln(\text{SINR}k) = \ln(S_k) + x_k - \underbrace{\ln!\left(\sum_j w{jk}
+  e^{x_j} + \text{noise}k\right)}{\text{log-sum-exp}_k \to \text{convex}}$$
+
+  Each constraint $\ln(\text{SINR}_k) \geq \ln(\gamma_k)$ means: convex $\leq$
+  affine — a valid convex constraint.
+
+  Line-by-line explanation (GP ZF)
+
+      lse_const = log(p.rho_u * c_err);
+  Pre-compute constants: $\ln(\rho_u c_i)$ for each user i. These are the
+  constant offsets in the log-sum-exp argument.
+
+          lse = log_sum_exp([lse_const + x; 0]);
+  Common denominator in log domain: $\ln(D) = \text{logsumexp}([\ln(\rho_u c_1)
+  + x_1, \ldots, \ln(\rho_u c_K) + x_K, 0])$. The trailing 0 accounts for the
+  "+1" in the denominator since $e^0 = 1$. CVX recognizes log_sum_exp as a
+  convex function.
+
+          maximize(log(a(1)) + x(1) - lse)
+  Objective: $\ln(\text{SINR}_1) = \ln(a_1) + x_1 - \ln(D)$ = affine - convex =
+  concave. Valid for CVX maximize.
+
+              for k = 2:K
+                  log(a(k)) + x(k) - lse >= log(gamma(k));
+              end
+  QoS: $\ln(a_k) + x_k - \text{lse} \geq \ln(\gamma_k)$, i.e., $\text{lse} \leq
+  \ln(a_k) + x_k - \ln(\gamma_k)$. This is convex $\leq$ affine — a valid convex
+   constraint.
+
+              x <= 0;
+  Power constraint: $\eta_k = e^{x_k} \leq 1 \Leftrightarrow x_k \leq 0$.
+
+      eta = exp(x);
+  Recover power coefficients: $\eta_k = e^{x_k}$.
+
+  Line-by-line explanation (GP CB — what's different)
+
+          lse1 = log_sum_exp([log(w(:,1)) + x; log(noise(1))]);
+  User 1's denominator: $\ln(D_1) = \text{logsumexp}([\ln(w_{11}) + x_1, \ldots,
+   \ln(w_{K1}) + x_K, \ln(\text{noise}1)])$. Unlike ZF's single shared 
+  denominator, CB has a per-user denominator with user-specific weights $w{jk}$.
+
+              for k = 2:K
+                  lse_k = log_sum_exp([log(w(:,k)) + x; log(noise(k))]);
+                  log(S(k)) + x(k) - lse_k >= log(gamma(k));
+              end
+  Each QoS constraint has its own log-sum-exp $\text{lse}k$ with weights 
+  $w{:,k}$ specific to user k. CVX evaluates each one independently.
+
+  ---
+  Summary of all power control approaches
+
+  Column 1: Objective
+  SCA (Algorithms 1,3): Maximize total rate $\sum_k R_k$
+  GP (Algorithms 2,4): Maximize one user's rate $R_1$
+  ────────────────────────────────────────
+  Column 1: Method
+  SCA (Algorithms 1,3): Iterative (DC programming)
+  GP (Algorithms 2,4): Single convex solve
+  ────────────────────────────────────────
+  Column 1: Iterations
+  SCA (Algorithms 1,3): ~4 until convergence
+  GP (Algorithms 2,4): None (one-shot)
+  ────────────────────────────────────────
+  Column 1: CVX function
+  SCA (Algorithms 1,3): log(affine) in each subproblem
+  GP (Algorithms 2,4): log_sum_exp(affine)
+  ────────────────────────────────────────
+  Column 1: QoS constraints
+  SCA (Algorithms 1,3): Linear in eta
+  GP (Algorithms 2,4): Convex (log-sum-exp $\leq$ affine)
+
+  Key insight for your future papers
+
+  When you see an optimization with SINR = numerator / denominator where both
+  are linear in the power variables:
+  1. Write the rate as $R = \log(\text{num} + \text{denom}) -
+  \log(\text{denom})$ → DC decomposition
+  2. For sum-rate: SCA — linearize the subtracted concave term at each iteration
+  3. For single-user: log-domain GP — use log_sum_exp to make the denominator
+  convex
+
+  This pattern appears in almost every power control paper in cell-free MIMO,
+  massive MIMO, and NOMA.
+
+✻ Brewed for 16m 23s

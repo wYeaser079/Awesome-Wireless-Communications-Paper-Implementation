@@ -1,0 +1,1261 @@
+
+ ▐▛███▜▌   Claude Code v2.1.50
+▝▜█████▛▘  Opus 4.6 · Claude Max
+  ▘▘ ▝▝    F:\Codes\Awesome-Wireless-Communications
+
+❯ I want you to first read @"paper implementation/Cell-free Massive MIMO ZF 
+   and CB Receiver/chat002_code_implementation.txt"                         
+  and @"paper implementation/Cell-free Massive MIMO ZF and CB               
+  Receiver/chat001_initial_implementation.txt"                              
+  --------------                                                            
+  Read this two files and add its content to your context and memory.       
+  Then I will command you what to do next.                                  
+
+● I've already received both files through the system context. Let me read them
+  fully to make sure I have the complete content.
+
+● Read 1 file (ctrl+o to expand)
+
+● Now let me also check what code files have already been written.
+
+● Searched for 1 pattern, read 2 files (ctrl+o to expand)
+
+● I've read both files completely and also checked the existing code. Let me
+  save this context to memory for future reference.
+
+● Wrote 1 memory (ctrl+o to expand)
+
+● Both files are fully loaded into my context. Here's a summary of where things
+  stand:
+
+  Current state:
+  - Steps 1-2 are complete — params.m and generate_setup.m are written
+  - Next up: Step 3 (Pilot Assignment) onward
+  - The existing code uses grid AP placement, random user placement, Ngo 2017
+  three-slope path loss with wrap-around, and shadow fading
+
+  I have the full implementation plan (14 steps), all design decisions, MATLAB
+  conventions, and the teaching philosophy in context. Ready for your next
+  command.
+
+✻ Worked for 41s
+
+❯ Now implement step 3 and 4 and 5.                                         
+  Then, you will explain me each line of the code for each step. So that,   
+  next time, I can write them by my own with proper reasoning and           
+  understanding.                                                            
+
+● Let me first read the paper analysis and the detailed equations before writing
+   code, to get everything right.
+
+● Explore(Read paper analysis docs)
+  ⎿  Done (7 tool uses · 33.8k tokens · 19s)
+  (ctrl+o to expand)
+
+● Good, I have all the equations. Let me also read the paper PDF to double-check
+   the equations before coding.
+
+● Read 1 file (ctrl+o to expand)
+
+● I have all the equations confirmed. Now let me implement all three steps.
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\assign_pilots.m)
+  ⎿  Wrote 27 lines to paper implementation\Cell-free Massive MIMO ZF and CB
+      Receiver\assign_pilots.m
+     function pilot_index = assign_pilots(K, tau)
+     %ASSIGN_PILOTS Assign pilot sequences to K users from tau orthogonal 
+     pilots.
+     %   pilot_index = assign_pilots(K, tau)
+     %
+     %   When tau >= K: each user gets a unique orthogonal pilot (no 
+     contamination).
+     %   When tau <  K: users are randomly assigned one of tau pilots (some 
+     share).
+     %
+     %   The inner product |phi_i^H * phi_k|^2 equals:
+     %       1   if pilot_index(i) == pilot_index(k)   (same pilot)
+     %       0   otherwise                               (orthogonal)
+
+     … +17 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\estimate_channel.m)
+  ⎿  Wrote 46 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\estimate_channel.m
+     function [alpha, c_coeff] = estimate_channel(beta, pilot_index, p)
+     %ESTIMATE_CHANNEL Compute MMSE channel estimation parameters (Eq. 5, 
+     8).
+     %   [alpha, c_coeff] = estimate_channel(beta, pilot_index, p)
+     %
+     %   Computes the MMSE filter coefficient c_mk (Eq. 5) and channel 
+     estimate
+     %   variance alpha_mk (Eq. 8). These depend ONLY on large-scale fading
+     %   coefficients (beta) and pilot assignments — not on channel 
+     realizations.
+     %   They are computed once per network setup and reused across all 
+     Monte
+     %   Carlo channel realizations.
+     %
+     … +36 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\generate_channel.m)
+  ⎿  Wrote 68 lines to paper implementation\Cell-free Massive MIMO ZF and CB
+      Receiver\generate_channel.m
+     function [G, G_hat] = generate_channel(beta, alpha, c_coeff,
+     pilot_index, p)
+     %GENERATE_CHANNEL Generate one channel realization and MMSE estimates.
+     %   [G, G_hat] = generate_channel(beta, alpha, c_coeff, pilot_index, p)
+     %
+     %   For one Monte Carlo realization:
+     %     1. Generates true channels g_mk = sqrt(beta_mk)*h_mk        (Eq. 
+     1)
+     %     2. Simulates pilot transmission at each AP                    
+     (Eq. 2)
+     %     3. De-spreads pilot signal for each user                      
+     (Eq. 3)
+     %     4. Computes MMSE channel estimates g_hat_mk = c_mk*Y_tilde   (Eq.
+      4)
+     %
+
+
+     … +58 lines (ctrl+o to expand)
+
+● All three files are written. Now let me give you the line-by-line explanation
+  for each step.
+
+  ---
+  Step 3: assign_pilots.m — Pilot Assignment
+
+  What this function does
+
+  It assigns each of the K users one of tau available orthogonal pilot
+  sequences. The output pilot_index(k) tells you which pilot user k uses.
+
+  Line-by-line
+
+  function pilot_index = assign_pilots(K, tau)
+  Inputs: K users, tau available orthogonal pilots. Output: a K x 1 vector.
+
+      if tau >= K
+          pilot_index = (1:K).';
+  When tau >= K: We have enough orthogonal pilots for every user. User 1 gets
+  pilot 1, user 2 gets pilot 2, ..., user K gets pilot K. No two users share a
+  pilot, so there is zero pilot contamination.
+
+  The .' transposes row vector [1 2 ... K] into a column vector.
+
+      else
+          pilot_index = randi(tau, K, 1);
+  When tau < K: Not enough pilots. Each user randomly picks one from {1, ..., 
+  tau}. Some users will inevitably share a pilot. This causes pilot 
+  contamination — the channel estimate for user k gets polluted by channels of
+  users sharing k's pilot.
+
+  Why this matters for Eq. 5 and 8
+
+  The inner product |phi_i^H * phi_k|^2 appears in the MMSE equations. With
+  orthogonal pilot assignment:
+
+  | Condition | |phi_i^H * phi_k|^2 | Meaning |
+  |---|---|---|
+  | pilot_index(i) == pilot_index(k) | 1 | Same pilot — contributes to
+  contamination |
+  | pilot_index(i) != pilot_index(k) | 0 | Orthogonal — invisible to each other
+  |
+
+  So the sum SUM_i beta_mi * |phi_i^H * phi_k|^2 in the denominator simplifies
+  to summing beta_mi only over users i that share user k's pilot. This is the
+  set P_k.
+
+  For our paper's default: tau = 10, K = 10
+
+  Every user gets a unique pilot. pilot_index = [1; 2; 3; ...; 10]. No
+  contamination. The sum in the denominator reduces to just beta_mk (only user k
+   itself).
+
+  ---
+  Step 4: estimate_channel.m — MMSE Parameters (alpha, c)
+
+  What this function does
+
+  Computes two M x K matrices that depend only on large-scale fading (beta) and
+  pilot assignments — not on any channel realization. These are computed once 
+  per network setup and reused across hundreds of Monte Carlo channel
+  realizations.
+
+  Line-by-line
+
+      [M, K] = size(beta);
+      alpha   = zeros(M, K);
+      c_coeff = zeros(M, K);
+  Pre-allocate output matrices. beta is M x K, so we extract dimensions from it.
+
+      for k = 1:K
+          same_pilot = (pilot_index == pilot_index(k));
+  For each user k, find the co-pilot set P_k — all users (including k) that
+  share k's pilot. same_pilot is a K x 1 logical vector: true at positions of
+  co-pilot users.
+
+  Example: If pilot_index = [1;2;3;1;5;6;7;8;9;10], then for k=1: same_pilot = 
+  [1;0;0;1;0;0;0;0;0;0] (users 1 and 4 share pilot 1).
+
+          for m = 1:M
+              denom = p.tau * p.rho_p * sum(beta(m, same_pilot)) + 1;
+  The denominator — shared by both Eq. 5 and Eq. 8:
+
+  denom = tau * rho_p * SUM_{i in P_k} beta_mi + 1
+
+  This is the total received power at AP m from all co-pilot users, plus
+  normalized noise power (the +1). Think of it as: "how much energy does AP m
+  see when it listens for pilot pilot_index(k)?"
+
+  - beta(m, same_pilot) extracts beta_mi for all co-pilot users i
+  - sum(...) adds them up
+  - Multiply by tau * rho_p (pilot energy)
+  - Add 1 (noise)
+
+              c_coeff(m, k) = sqrt(p.tau * p.rho_p) * beta(m, k) / denom;
+  Eq. 5 — the MMSE filter coefficient:
+
+  c_mk = sqrt(tau * rho_p) * beta_mk / denom
+
+  Physical meaning: This is the Wiener filter weight. It's the ratio of "how
+  much signal power AP m expects from user k" to "total power AP m sees on this
+  pilot." If user k has a strong channel (large beta_mk) and little
+  contamination, c_mk is large — the AP trusts the observation. If many users
+  share the pilot or the channel is weak, c_mk is small — the AP downweights the
+   observation.
+
+  The sqrt(tau * rho_p) in the numerator (not tau * rho_p) is because c_mk
+  multiplies the de-spread signal which already contains a sqrt(tau * rho_p)
+  factor. So c_mk * sqrt(tau*rho_p) * g_mk gives tau*rho_p*beta_mk/denom * h_mk
+  — the right scale for alpha_mk.
+
+              alpha(m, k) = p.tau * p.rho_p * beta(m, k)^2 / denom;
+  Eq. 8 — the channel estimate variance:
+
+  alpha_mk = tau * rho_p * beta_mk^2 / denom
+
+  Physical meaning: alpha_mk tells you how much useful information the estimate
+  captured. Notice:
+  - Numerator: tau * rho_p * beta_mk^2 — proportional to pilot energy and
+  channel strength squared
+  - Denominator: total interference + noise on this pilot
+
+  Key relationships:
+  - alpha_mk <= beta_mk always (you can't know more than what's there)
+  - alpha_mk = beta_mk * c_mk * sqrt(tau * rho_p) (you can verify: c_mk * 
+  sqrt(tau*rho_p) * beta_mk = tau*rho_p*beta_mk^2/denom = alpha_mk)
+  - beta_mk - alpha_mk = estimation error variance (what you don't know)
+
+  No pilot contamination case (tau >= K): same_pilot has only user k, so
+  sum(beta(m, same_pilot)) = beta(m,k), and:
+
+  alpha_mk = tau*rho_p*beta_mk^2 / (tau*rho_p*beta_mk + 1)
+
+  As rho_p -> infinity: alpha_mk -> beta_mk (perfect estimation). This makes
+  sense — infinite pilot power means zero noise.
+
+  ---
+  Step 5: generate_channel.m — Channel Realization + MMSE Estimation
+
+  What this function does
+
+  Generates one Monte Carlo realization: creates random true channels and
+  estimates them through the pilot-based MMSE process. This function is called
+  hundreds of times (once per realization) inside simulation loops.
+
+  Line-by-line — Part 1: True channel generation (Eq. 1)
+
+      G = zeros(M*N, K);
+  G is the global channel matrix: MN x K. Column k of G is the aggregate channel
+   from user k to all M APs (each contributing N antenna elements). So column k
+  has the structure:
+
+  G(:, k) = [g_1k; g_2k; ...; g_Mk]    (MN x 1)
+
+  where g_mk is N x 1.
+
+      for m = 1:M
+          for k = 1:K
+              h_mk = (1/sqrt(2)) * (randn(N, 1) + 1i * randn(N, 1));
+  Generate small-scale fading h_mk ~ CN(0, I_N). Each element is circularly
+  symmetric complex Gaussian with zero mean and unit variance.
+
+  Why 1/sqrt(2)? A CN(0,1) random variable z = x + jy where x, y ~ N(0, 1/2)
+  independently. So E[|z|^2] = E[x^2] + E[y^2] = 1/2 + 1/2 = 1. If we use
+  randn() which gives N(0,1), we need to scale by 1/sqrt(2) to get N(0, 1/2) for
+   each component.
+
+              rows = (m-1)*N + 1 : m*N;
+              G(rows, k) = sqrt(beta(m, k)) * h_mk;
+  Eq. 1: g_mk = sqrt(beta_mk) * h_mk. The rows index picks the N-element block
+  corresponding to AP m within the MN-tall column.
+
+  Example with M=3, N=2:
+  - AP 1: rows 1:2
+  - AP 2: rows 3:4
+  - AP 3: rows 5:6
+
+  Line-by-line — Part 2: Pilot transmission + estimation (Eq. 2-4)
+
+      G_hat = zeros(M*N, K);
+  Same structure as G, but will hold the estimated channels.
+
+      for m = 1:M
+          rows = (m-1)*N + 1 : m*N;
+          W_mp = (1/sqrt(2)) * (randn(N, p.tau) + 1i * randn(N, p.tau));
+  Generate the pilot-phase noise at AP m: W_m,p is N x tau with CN(0,1) entries.
+   This is the thermal noise the AP experiences while listening to pilots.
+
+  Why generate per AP, not per (AP, user)? Because one noise matrix represents
+  the physical noise at AP m during the entire pilot phase. Different users'
+  de-spread observations share this same noise (through different projections).
+
+          for k = 1:K
+              same_pilot = (pilot_index == pilot_index(k));
+              signal = sqrt(p.tau * p.rho_p) * sum(G(rows, same_pilot), 2);
+  De-spreading the pilot signal (Eq. 3): After multiplying the received signal
+  by phi_k, only channels of co-pilot users survive (orthogonality kills the
+  rest).
+
+  G(rows, same_pilot) extracts the N x |P_k| submatrix of channel vectors at AP
+  m for all co-pilot users. sum(..., 2) sums across columns (across co-pilot
+  users), giving an N x 1 vector.
+
+  The sqrt(tau * rho_p) factor comes from the pilot transmission energy (Eq. 2).
+
+  When tau >= K (no contamination): same_pilot selects only user k, so signal = 
+  sqrt(tau*rho_p) * G(rows, k) — only user k's channel, clean.
+
+  When tau < K (contamination): other users' channels leak in.
+
+              noise = W_mp(:, pilot_index(k));
+  De-spread noise: W_m,p * phi_k. Since we use phi_k = e_{pilot_index(k)}
+  (standard basis vector), the result is just the pilot_index(k)-th column of
+  W_mp.
+
+  Critical detail: If users k1 and k2 share the same pilot, they get the same 
+  noise vector W_mp(:, t). This is physically correct — they're listening on the
+   same pilot dimension and see the same noise projection.
+
+  The result noise is N x 1 and distributed as CN(0, I_N).
+
+              Y_tilde = signal + noise;
+  Eq. 3 complete: The de-spread observation at AP m for user k:
+
+  Y_tilde_mk = sqrt(tau*rho_p) * SUM_{i in P_k} g_mi + W_mp * phi_k
+
+              G_hat(rows, k) = c_coeff(m, k) * Y_tilde;
+  Eq. 4: The MMSE estimate g_hat_mk = c_mk * Y_tilde_mk. A scalar times a
+  vector. The Wiener filter coefficient c_mk optimally scales the noisy
+  observation.
+
+  What g_hat_mk looks like statistically (Eq. 7): g_hat_mk ~ CN(0, alpha_mk * 
+  I_N). It's Gaussian, zero-mean, with variance alpha_mk per element. The
+  estimation error g_mk - g_hat_mk ~ CN(0, (beta_mk - alpha_mk) * I_N) is
+  independent of the estimate (the MMSE orthogonality property).
+
+  ---
+  Sanity check script
+
+  Run this in MATLAB to verify everything works:
+
+  p = params();
+  [beta, ap_pos, ue_pos] = generate_setup(p);
+
+  % Step 3: Pilot assignment
+  pilot_index = assign_pilots(p.K, p.tau);
+  fprintf('Pilot assignment: '); fprintf('%d ', pilot_index); fprintf('\n');
+  fprintf('Unique pilots used: %d / %d available\n',
+  length(unique(pilot_index)), p.tau);
+
+  % Step 4: MMSE parameters
+  [alpha, c_coeff] = estimate_channel(beta, pilot_index, p);
+  fprintf('\n--- Sanity checks (Step 4) ---\n');
+  fprintf('alpha <= beta everywhere? %d\n', all(alpha(:) <= beta(:) + 1e-15));
+  fprintf('alpha range:  [%.2e, %.2e]\n', min(alpha(:)), max(alpha(:)));
+  fprintf('beta range:   [%.2e, %.2e]\n', min(beta(:)), max(beta(:)));
+  fprintf('alpha/beta ratio range: [%.4f, %.4f]\n', ...
+      min(alpha(:)./beta(:)), max(alpha(:)./beta(:)));
+
+  % Step 5: One channel realization
+  [G, G_hat] = generate_channel(beta, alpha, c_coeff, pilot_index, p);
+
+  % Statistical check: average over many realizations
+  num_checks = 500;
+  est_power  = zeros(p.M, p.K);
+  err_power  = zeros(p.M, p.K);
+  for r = 1:num_checks
+      [G_r, Gh_r] = generate_channel(beta, alpha, c_coeff, pilot_index, p);
+      for k = 1:p.K
+          for m = 1:p.M
+              rows = (m-1)*p.N+1 : m*p.N;
+              est_power(m,k) = est_power(m,k) + norm(Gh_r(rows,k))^2;
+              err_power(m,k) = err_power(m,k) + norm(G_r(rows,k) -
+  Gh_r(rows,k))^2;
+          end
+      end
+  end
+  est_power = est_power / num_checks;
+  err_power = err_power / num_checks;
+
+  fprintf('\n--- Sanity checks (Step 5) ---\n');
+  fprintf('E[||g_hat_mk||^2] vs N*alpha_mk (should be ~1.0):\n');
+  fprintf('  Ratio range: [%.4f, %.4f]\n', ...
+      min(est_power(:)./(p.N*alpha(:))), max(est_power(:)./(p.N*alpha(:))));
+  fprintf('E[||g_mk - g_hat_mk||^2] vs N*(beta-alpha) (should be ~1.0):\n');
+  fprintf('  Ratio range: [%.4f, %.4f]\n', ...
+      min(err_power(:)./(p.N*(beta(:)-alpha(:)))), ...
+      max(err_power(:)./(p.N*(beta(:)-alpha(:)))));
+
+  What you should see:
+  - alpha <= beta everywhere: 1 (always true)
+  - alpha/beta ratio close to 1 (good estimation because tau=K, no
+  contamination, high pilot SNR)
+  - Estimate power ratio and error power ratio both close to 1.0 (confirms the
+  statistical properties from Eq. 7)
+
+  Run this and let me know your results. Once verified, we move to Step 6 (CB
+  spectral efficiency).
+
+❯ I want you to implement step 6 and 7.                                     
+  Then, you will explain me each line of the code so that I can write them  
+  on my own if I had to reproduce this paper or similar paper related to    
+  wireless.                                                                 
+  While, explaining please also mention the part of the paper, you are      
+  referring.                                                                
+  Write down the equation with proper conventional sign.                    
+  Read @"paper implementation/Cell-free Massive MIMO ZF and CB              
+  Receiver/chat001_initial_implementation.txt"                              
+  And @"paper implementation/Cell-free Massive MIMO ZF and CB               
+  Receiver/chat002_code_implementation.txt" for the context                 
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\chat001_initial_implementation.txt (470 lines)
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\chat002_code_implementation.txt (676 lines)
+
+● I have both chat files in context. Now let me read the exact equations for
+  Steps 6 and 7 from the paper analysis, and also read the existing code files I
+   need to build on.
+
+● Read 3 files (ctrl+o to expand)
+
+● Now let me read the CB receiver section (Lemma 1, Eq. 33-35).
+
+● Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Now I have all equations for both steps. Let me also quickly verify the
+  existing code files I'll depend on.
+
+● Read 2 files (ctrl+o to expand)
+
+● Good, I have full context of all existing code and all equations. Now let me
+  write both files.
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\compute_SE_CB.m)
+  ⎿  Wrote 75 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\compute_SE_CB.m
+     function R_CB = compute_SE_CB(beta, alpha, pilot_index, p, eta)
+     %COMPUTE_SE_CB CB spectral efficiency via closed-form (Lemma 1, Eq. 
+     33-35).
+     %   R_CB = compute_SE_CB(beta, alpha, pilot_index, p)
+     %   R_CB = compute_SE_CB(beta, alpha, pilot_index, p, eta)
+     %
+     %   Eq. 33:  SINR_k^CB = eta_k * ||l_kk||^2
+     %            / [ SUM_{i!=k} eta_i*||l_ik||^2
+     %                + (1/N) * SUM_i eta_i*||theta_ik||^2
+     %                + (1/(N*rho_u)) * ||l_kk||_1 ]
+     %
+     … +65 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\compute_SE_ZF.m)
+  ⎿  Wrote 62 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\compute_SE_ZF.m
+     function R_ZF = compute_SE_ZF(beta, alpha, pilot_index, p, eta)
+     %COMPUTE_SE_ZF ZF spectral efficiency via closed-form (Theorem 1, Eq. 
+     16-20).
+     %   R_ZF = compute_SE_ZF(beta, alpha, pilot_index, p)
+     %   R_ZF = compute_SE_ZF(beta, alpha, pilot_index, p, eta)
+     %
+     %   Eq. 16:  R_k^ZF ~ log2(1 + rho_u * Omega(k) * eta_k
+     %                              / [rho_u * SUM_i eta_i * c_i + 1])
+     %
+     %   Eq. 17:  c_i = max_m (beta_mi - alpha_mi)
+     %   Eq. 18:  Omega(k) = (N * S1^2 - S2) / S1
+     … +52 lines (ctrl+o to expand)
+
+● Both files are written. Now let me give you the full explanation.
+
+  ---
+  Step 6: compute_SE_CB.m — CB Spectral Efficiency (Lemma 1)
+
+  The big picture
+
+  CB (Conjugate Beamforming) uses the detector A = G_hat — it simply multiplies
+  the received signal by the conjugate of the estimated channel. It makes no 
+  attempt to cancel interference. The closed-form rate expression (Lemma 1)
+  tells us exactly how much spectral efficiency each user gets, without running
+  any Monte Carlo simulation.
+
+  The three equations you're implementing
+
+  Eq. 33 — The SINR:
+
+                          η_k · ‖l_kk‖²
+  SINR_k^CB = ─────────────────────────────────────────────────────
+              Σ_{i≠k} η_i·‖l_ik‖²  +  (1/N)·Σ_i η_i·‖θ_ik‖²  +
+  (1/(Nρ_u))·‖l_kk‖₁
+
+  Eq. 34 — The l_ik vector (coherent interference):
+
+  l_ik = |φ_k^H φ_i| · [α_{1k}·β_{1i}/β_{1k},  ...,  α_{Mk}·β_{Mi}/β_{Mk}]^T
+
+  Eq. 35 — The θ_ik vector (non-coherent interference):
+
+  θ_ik = [√(β_{1i}·α_{1k}),  ...,  √(β_{Mi}·α_{Mk})]^T
+
+  Line-by-line
+
+  function R_CB = compute_SE_CB(beta, alpha, pilot_index, p, eta)
+  Takes beta (M×K), alpha (M×K), pilot assignments, parameters, and optional
+  power control eta (K×1). Returns per-user rates R_CB (K×1).
+
+      if nargin < 5
+          eta = ones(K, 1);
+      end
+  If no power control is specified, use equal power control (η_k = 1 for all k).
+   This is the default for Figures 2 and 3 in the paper.
+
+  The desired signal term
+
+          signal = sum(alpha(:, k).^2);
+
+  This computes ‖l_kk‖²₂.
+
+  Why? From Eq. 34, when i = k: |φ_k^H φ_k| = 1, and β_{mk}/β_{mk} = 1, so:
+
+  l_kk = [α_{1k}, α_{2k}, ..., α_{Mk}]^T
+
+  Therefore ‖l_kk‖² = Σ_m α²_{mk}.
+
+  Physical meaning: This is the desired signal power after CB processing. Each
+  AP m contributes α²_{mk} — the square of the estimation quality. APs with
+  better estimates contribute more. The contributions add coherently (squared
+  sum vs sum of squares) because the CB receiver aligns phases.
+
+  The coherent interference
+
+          coh_interf = 0;
+          for i = 1:K
+              if i == k
+                  continue;
+              end
+              if pilot_index(i) ~= pilot_index(k)
+                  continue;
+              end
+              l_ik = alpha(:, k) .* beta(:, i) ./ beta(:, k);
+              coh_interf = coh_interf + eta(i) * sum(l_ik.^2);
+          end
+
+  This computes Σ_{i≠k} η_i · ‖l_ik‖² from the numerator's perspective in Eq.
+  33's denominator.
+
+  The two continue statements are the key insight. From Eq. 34:
+  - |φ_k^H φ_i| = 1 if users i and k share the same pilot
+  - |φ_k^H φ_i| = 0 if their pilots are orthogonal
+
+  So l_ik = 0 whenever pilots differ — no coherent interference from 
+  orthogonal-pilot users. We skip them entirely.
+
+  For co-pilot users (same pilot), the m-th entry of l_ik is:
+
+  [l_ik]_m = α_{mk} · β_{mi} / β_{mk}
+
+  Physical meaning: Coherent interference happens because the CB receiver cannot
+   distinguish between user k's channel and user i's channel when they share the
+   same pilot. The estimate ĝ_{mk} is contaminated by g_{mi}, so when CB aligns
+  to ĝ_{mk}, it also coherently combines user i's signal.
+
+  The factor β_{mi}/β_{mk} is the ratio "how strong is user i at AP m relative
+  to user k." If user i is much stronger, the contamination is worse.
+
+  For our default setup (τ = K = 10): No pilot sharing, so coh_interf = 0. This
+  loop contributes nothing. But when τ < K, this term becomes the dominant 
+  interference and grows as O(M²).
+
+  The non-coherent interference
+
+          noncoh_interf = 0;
+          for i = 1:K
+              noncoh_interf = noncoh_interf + eta(i) * sum(beta(:, i) .*
+  alpha(:, k));
+          end
+          noncoh_interf = noncoh_interf / p.N;
+
+  This computes (1/N) · Σ_{i=1}^K η_i · ‖θ_ik‖².
+
+  From Eq. 35: ‖θ_ik‖² = Σ_m β_{mi} · α_{mk}.
+
+  Notice the sum is over all users i (including k, unlike coherent
+  interference). We compute sum(beta(:,i) .* alpha(:,k)) — element-wise product
+  of beta column i with alpha column k, then sum over all M APs.
+
+  Physical meaning: Even with perfectly orthogonal pilots, CB still suffers from
+   inter-user interference because it doesn't null other users. The term β_{mi} 
+  · α_{mk} says: "AP m picks up user i's signal with strength β_{mi}, and AP m
+  contributes to user k's estimate with weight α_{mk}." The cross-product is
+  unavoidable.
+
+  The 1/N factor: Each AP has N antennas. The non-coherent interference averages
+   out partially over N antennas (randomness across antennas helps). More
+  antennas → less non-coherent interference per antenna. This is why N=6
+  outperforms N=2.
+
+  Scaling: This term grows as O(M) — linearly with the number of APs. The
+  desired signal grows as O(M²). So as M → ∞, non-coherent interference becomes
+  negligible.
+
+  The noise term
+
+          noise = sum(alpha(:, k)) / (p.N * p.rho_u);
+
+  This computes (1/(N·ρ_u)) · ‖l_kk‖₁, where ‖l_kk‖₁ = Σ_m α_{mk}.
+
+  Physical meaning: After CB processing, the noise power is proportional to
+  ‖ĝ_k‖² ≈ N · Σ_m α_{mk}. The 1/N and 1/ρ_u come from normalizing: more
+  antennas and higher data SNR both reduce the noise's relative impact.
+
+  Scaling: O(M) — becomes negligible as M → ∞ compared to the O(M²) signal.
+
+  Assembling the SINR and rate
+
+          sinr_k = eta(k) * signal / (coh_interf + noncoh_interf + noise);
+          R_CB(k) = p.prelog * log2(1 + sinr_k);
+
+  The pre-log factor (1 - τ/T) accounts for the fraction of the coherence
+  interval used for data transmission (the rest is spent on pilots).
+
+  ---
+  Step 7: compute_SE_ZF.m — ZF Spectral Efficiency (Theorem 1)
+
+  The big picture
+
+  ZF (Zero Forcing) uses the detector A = Ĝ(Ĝ^H Ĝ)^{-1}, which completely
+  cancels inter-user interference based on the estimated channels. The residual
+  interference comes only from channel estimation errors. Theorem 1 is the
+  paper's main theoretical contribution — it gives a tight closed-form
+  approximation to the ZF rate, avoiding expensive Monte Carlo simulation.
+
+  The four equations you're implementing
+
+  Eq. 16 — The SINR:
+
+                      ρ_u · Ω(k) · η_k
+  SINR_k^ZF ≈ ─────────────────────────────
+                ρ_u · Σ_{i=1}^K η_i · c_i + 1
+
+  Eq. 17 — Worst-case estimation error:
+
+  c_i = max_m (β_{mi} − α_{mi})
+
+  Eq. 18 — Effective array gain:
+
+  Ω(k) = (N · S₁² − S₂) / S₁
+
+  where  S₁ = Σ_{m∈M_k} α_{mk}
+         S₂ = Σ_{m∈M_k} α²_{mk}
+
+  Eq. 19-20 — AP selection set:
+
+  M_k = {1,...,M} \ {m_j* : j ≠ k}     where  m_j* = argmax_m β_{mj}
+
+  Line-by-line
+
+  Computing c_i (Eq. 17)
+
+      c_err = max(beta - alpha, [], 1).';   % K x 1
+
+  For each user i, find the AP m that has the largest estimation error β_{mi} − 
+  α_{mi}.
+
+  - beta - alpha gives an M×K matrix of estimation errors
+  - max(..., [], 1) takes the maximum down each column (over APs), returning 1×K
+  - .' transposes to K×1
+
+  Physical meaning: ZF cancels interference based on estimated channels. The
+  residual interference comes from estimation errors g̃_{mi} = g_{mi} − ĝ_{mi},
+  which has variance β_{mi} − α_{mi} per element. By taking the worst-case
+  (maximum) over APs, Theorem 1 creates a tight upper bound on the interference.
+   This is what makes the approximation a lower bound on the true rate.
+
+  When is c_i small (good)?
+  - High pilot SNR → α_{mi} ≈ β_{mi} → error ≈ 0
+  - No pilot contamination → better estimates → smaller errors
+  - c_i = 0 only with perfect CSI (α = β), which requires infinite pilot energy
+
+  Finding dominant APs (Eq. 20)
+
+      [~, dominant_ap] = max(beta, [], 1);  % 1 x K
+
+  For each user j, find the AP m that has the strongest link to user j (largest
+  β_{mj}). The ~ discards the actual maximum value; we only need the index.
+
+  Physical meaning: m_j* is the AP that is "closest to" (or has the best channel
+   to) user j. In the ZF analysis, this AP's behavior is dominated by user j,
+  making its contribution to the ZF gain for other users unreliable. So we
+  exclude it.
+
+  Computing the denominator (Eq. 16)
+
+      denom = p.rho_u * sum(eta .* c_err) + 1;
+
+  The denominator ρ_u · Σ_{i=1}^K η_i · c_i + 1 is shared across all users k. It
+   represents:
+  - ρ_u · Σ η_i · c_i: total residual interference from estimation errors of all
+   K users
+  - + 1: normalized noise power
+
+  This is computed once, outside the per-user loop, because it doesn't depend on
+   k.
+
+  Key structural difference from CB: In ZF, the denominator sums over all users
+  and doesn't depend on k. In CB, the interference structure is user-specific
+  (depends on which users share k's pilot). This is because ZF cancels all
+  estimated interference globally, leaving only a common residual error floor.
+
+  Building M_k (Eq. 19)
+
+          excluded = dominant_ap([1:k-1, k+1:K]);
+          Mk = setdiff(1:M, excluded);
+
+  Line 1: Collect dominant APs of all users except k. dominant_ap([1:k-1, 
+  k+1:K]) picks K−1 indices.
+
+  Line 2: setdiff(1:M, excluded) removes those APs from the full set {1, ...,
+  M}.
+
+  Physical meaning: The set M_k represents APs that effectively contribute to
+  user k's ZF gain. For each other user j, we exclude the AP where j is
+  strongest. This exclusion comes from the proof of Theorem 1 — at AP m_j*, user
+   j's channel dominates, making the ZF vector unreliable for user k at that AP.
+   Removing at most K−1 APs from M APs means |M_k| ≥ M − (K−1). For M=60, K=10:
+  at least 51 APs remain.
+
+  Note: If two users share the same dominant AP, it's only excluded once. So
+  typically |M_k| > M − K + 1.
+
+  Computing Ω(k) (Eq. 18)
+
+          alpha_Mk = alpha(Mk, k);
+          S1 = sum(alpha_Mk);
+          S2 = sum(alpha_Mk.^2);
+          Omega_k = (p.N * S1^2 - S2) / S1;
+
+  The original form in the paper is:
+
+  Ω(k) = [S₂/S₁] × [N · S₁²/S₂ − 1]
+
+  Expanding: (S₂/S₁) × (N·S₁²/S₂ − 1) = N·S₁ − S₂/S₁ = (N·S₁² − S₂)/S₁
+
+  I use the simplified form for cleaner code.
+
+  What each part means:
+
+  - S1 = Σ_{m∈M_k} α_{mk}: Total estimation quality across all contributing APs.
+   This is the "coherent array gain" — all APs' estimates add up.
+  - S2 = Σ_{m∈M_k} α²_{mk}: Sum of squared estimation qualities. This captures
+  how unevenly the estimation quality is distributed across APs.
+  - The factor N: Number of antennas per AP. Ω(k) grows roughly linearly with N
+  — more antennas per AP means more spatial degrees of freedom for ZF to work
+  with. This is why the paper's Figure 2 shows dramatic improvement from N=2 to
+  N=6.
+  - The ratio S₂/S₁: This is a weighted average that penalizes uneven alpha
+  distributions. If all APs have equal α_{mk}, then S₂/S₁ = α and Ω(k) = (N − 1)
+   × |M_k| × α. If one AP dominates, Ω(k) is smaller.
+
+  SINR and rate (Eq. 16)
+
+          sinr_k = p.rho_u * Omega_k * eta(k) / denom;
+          R_ZF(k) = p.prelog * log2(1 + sinr_k);
+
+  The numerator ρ_u · Ω(k) · η_k is user k's effective signal power after ZF
+  processing. The pre-log factor (1 − τ/T) = 0.95 is applied as usual.
+
+  ---
+  Sanity check script
+
+  Run this in MATLAB to test both functions:
+
+  p = params();
+  [beta, ap_pos, ue_pos] = generate_setup(p);
+  pilot_index = assign_pilots(p.K, p.tau);
+  [alpha, c_coeff] = estimate_channel(beta, pilot_index, p);
+
+  % Compute SE
+  R_CB = compute_SE_CB(beta, alpha, pilot_index, p);
+  R_ZF = compute_SE_ZF(beta, alpha, pilot_index, p);
+
+  % Display results
+  fprintf('--- CB (Conjugate Beamforming) ---\n');
+  fprintf('Per-user rates: '); fprintf('%.2f ', R_CB); fprintf('\n');
+  fprintf('Sum rate:  %.2f bits/s/Hz\n', sum(R_CB));
+  fprintf('Mean rate: %.2f bits/s/Hz\n\n', mean(R_CB));
+
+  fprintf('--- ZF (Zero Forcing) ---\n');
+  fprintf('Per-user rates: '); fprintf('%.2f ', R_ZF); fprintf('\n');
+  fprintf('Sum rate:  %.2f bits/s/Hz\n', sum(R_ZF));
+  fprintf('Mean rate: %.2f bits/s/Hz\n\n', mean(R_ZF));
+
+  fprintf('--- Comparison ---\n');
+  fprintf('ZF/CB sum rate ratio: %.2f\n', sum(R_ZF)/sum(R_CB));
+  fprintf('ZF > CB for every user? %d\n', all(R_ZF > R_CB));
+
+  What you should see (with M=60, K=10, N=6):
+
+  ┌───────────────┬────────────────┬────────────────┐
+  │    Metric     │       CB       │       ZF       │
+  ├───────────────┼────────────────┼────────────────┤
+  │ Per-user rate │ ~1–5 bits/s/Hz │ ~3–8 bits/s/Hz │
+  ├───────────────┼────────────────┼────────────────┤
+  │ Sum rate      │ ~20–35         │ ~40–60         │
+  ├───────────────┼────────────────┼────────────────┤
+  │ ZF/CB ratio   │ —              │ ~1.5–2×        │
+  └───────────────┴────────────────┴────────────────┘
+
+  ZF should beat CB for every user, because ZF cancels interference while CB
+  does not.
+
+  Run this and let me know your results. Once verified, we move to Step 8 (ZF
+  Monte Carlo validation) which will prove that Theorem 1's closed-form matches
+  the actual simulation.
+
+✻ Sautéed for 3m 21s
+
+❯ I want you to implement step 8 and 9.                                     
+  Then, you will explain me each line of the code so that I can write them  
+  on my own if I had to reproduce this paper or similar paper related to    
+  wireless.                                                                 
+  While, explaining please also mention the part of the paper, you are      
+  referring.                                                                
+  Write down the equation with proper conventional sign.                    
+  Read @"paper implementation/Cell-free Massive MIMO ZF and CB              
+  Receiver/chat001_initial_implementation.txt"                              
+  And @"paper implementation/Cell-free Massive MIMO ZF and CB               
+  Receiver/chat002_code_implementation.txt" for the context                 
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\chat001_initial_implementation.txt (470 lines)
+  ⎿  Read paper implementation\Cell-free Massive MIMO ZF and CB 
+     Receiver\chat002_code_implementation.txt (676 lines)
+
+● I have both chat files in context from the system reminders. Let me read the
+  relevant paper analysis sections for Steps 8 and 9, and also review the
+  existing code I'll build on.
+
+● Read 3 files (ctrl+o to expand)
+
+● Now let me read the data transmission model (Eq. 9-11) and the section
+  describing Figures 1-2 in the paper.
+
+● Read 3 files (ctrl+o to expand)
+
+● I have full context of all files and equations. Now let me write both
+  implementations.
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\compute_SE_ZF_montecarlo.m)
+  ⎿  Wrote 76 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\compute_SE_ZF_montecarlo.m
+     function R_ZF_mc = compute_SE_ZF_montecarlo(beta, alpha, c_coeff,
+     pilot_index, p, eta)
+     %COMPUTE_SE_ZF_MONTECARLO ZF spectral efficiency via Monte Carlo (Eq. 
+     15).
+     %   R_ZF_mc = compute_SE_ZF_montecarlo(beta, alpha, c_coeff, 
+     pilot_index, p)
+     %   R_ZF_mc = compute_SE_ZF_montecarlo(beta, alpha, c_coeff, 
+     pilot_index, p, eta)
+     %
+     %   For each channel realization:
+     %     1. Generate G, G_hat via generate_channel          (Eq. 1-4)
+     %     2. Build ZF detector A = G_hat*(G_hat^H*G_hat)^-1  (Section 2.2)
+     %     3. Compute exact SINR_k from Eq. 15
+     %     4. R_k = log2(1 + SINR_k)
+     … +66 lines (ctrl+o to expand)
+
+● Write(paper implementation\Cell-free Massive MIMO ZF and CB
+       Receiver\main_fig2.m)
+  ⎿  Wrote 90 lines to paper implementation\Cell-free Massive MIMO ZF and 
+     CB Receiver\main_fig2.m
+     % main_fig2.m — Reproduce Figure 2: Sum spectral efficiency vs M
+     %
+     % Paper: Zhang et al. (JCN, 2019), Section IV, Figure 2
+     %
+     % Plots the sum SE for ZF and CB receivers with equal power control
+     % (eta_k = 1) as M varies from 20 to 80, for N = 2, 4, 6.
+     %
+     % The closed-form expressions are used (Theorem 1 for ZF, Lemma 1 for 
+     CB).
+     % Results are averaged over num_setups random network realizations.
+
+     … +80 lines (ctrl+o to expand)
+
+● Both files are written. Now here are the full explanations.
+
+  ---
+  Step 8: compute_SE_ZF_montecarlo.m — ZF Monte Carlo Validation
+
+  The big picture
+
+  Theorem 1 (Eq. 16) gives a closed-form approximation to the ZF rate. How do we
+   know it's accurate? We compare it against the exact SINR (Eq. 15) evaluated
+  over hundreds of random channel realizations. If they match closely, the
+  theorem is validated. This is what Figure 1 of the paper demonstrates.
+
+  The key difference:
+  - Eq. 16 (closed-form): Depends only on β, α (large-scale statistics). No
+  random channels needed. Instant to compute.
+  - Eq. 15 (exact): Depends on the random ZF detector a_k (which depends on the
+  random channel estimates Ĝ). Must be averaged over many realizations.
+
+  The equation you're implementing
+
+  Eq. 15 — Exact ZF SINR (conditioned on Ĝ):
+
+                            ρ_u · η_k
+  SINR_k^ZF = ─────────────────────────────────────────────────
+               Σ_m ‖a_mk‖² · [ρ_u · Σ_i η_i·(β_{mi} − α_{mi}) + 1]
+
+  Where:
+  - a_k = k-th column of A = Ĝ(Ĝ^H Ĝ)^{−1} (the ZF detector vector, MN × 1)
+  - a_mk = N-element sub-vector of a_k corresponding to AP m (rows (m−1)N+1 to
+  mN)
+  - β_{mi} − α_{mi} = estimation error variance for user i at AP m (from Eq. 7)
+
+  Line-by-line
+
+  Pre-computing the weighted error
+
+      err_m = (beta - alpha) * eta;   % M x 1
+
+  This computes Σ_i η_i · (β_{mi} − α_{mi}) for each AP m. It's a matrix-vector
+  product: the (M × K) estimation error matrix (β − α) times the (K × 1) power
+  control vector η.
+
+  Why pre-compute? This quantity depends only on the large-scale parameters (β,
+  α) and power control (η), NOT on the channel realization. It's the same for
+  all 300 realizations. Computing it once saves K multiplications per AP per
+  realization.
+
+  Physical meaning: For each AP m, this is the total residual interference power
+   from all K users' estimation errors, weighted by their transmit powers. APs
+  with larger estimation errors (far from users, or users with pilot
+  contamination) have larger err_m.
+
+  The Monte Carlo loop
+
+      for r = 1:p.num_channel_real
+
+  We loop over num_channel_real = 300 independent channel realizations. Each
+  realization draws new small-scale fading h_mk and new pilot noise W_{m,p},
+  producing new G and Ĝ.
+
+  Generating channels
+
+          [~, G_hat] = generate_channel(beta, alpha, c_coeff, pilot_index, p);
+
+  We call our Step 5 function. The ~ discards the true channel G — we only need
+  the estimated channel Ĝ for building the ZF detector. (Eq. 15 doesn't use G
+  directly; it uses the statistical error quantities β−α instead.)
+
+  Building the ZF detector (Paper Section 2.2)
+
+          A = G_hat / (G_hat' * G_hat);
+
+  This computes A = Ĝ · (Ĝ^H · Ĝ)^{−1}, which is the ZF detector matrix (MN ×
+  K).
+
+  MATLAB syntax: X / Y computes X * inv(Y). So G_hat / (G_hat' * G_hat) = G_hat 
+  * inv(G_hat' * G_hat). MATLAB uses the / operator more efficiently than
+  explicit inv() — it solves the linear system internally.
+
+  The ZF property: A^H · Ĝ = I_K. This means a_k^H · ĝ_i = δ_{ki}: the detector
+  for user k produces output 1 for user k's estimated channel and output 0 for
+  all other users' estimated channels. This is how ZF "forces" interference to
+  zero.
+
+  Size check: Ĝ is MN × K, Ĝ^H · Ĝ is K × K (Gram matrix), A is MN × K.
+
+  Requirement: Ĝ^H · Ĝ must be invertible. This requires MN ≥ K and the columns
+  of Ĝ to be linearly independent. For M=60, N=6, K=10: MN = 360 >> 10. This is
+  the "massive" regime — ZF always works.
+
+  Computing per-user SINR (Eq. 15)
+
+              a_k = A(:, k);                          % MN x 1
+
+  Extract the k-th column of A — this is the ZF detection vector for user k.
+
+              a_k_mat = reshape(a_k, N, M);           % N x M
+
+  Reshape the MN × 1 vector into an N × M matrix. Column m of a_k_mat contains
+  the N-element sub-vector a_mk — the portion of user k's ZF vector at AP m.
+
+  Why reshape? The vector a_k is stacked as [a_{1k}; a_{2k}; ...; a_{Mk}]. By
+  reshaping to N × M, column m gives a_{mk} directly, and we can compute per-AP
+  norms using sum(abs(...).^2, 1) — a single vectorized operation instead of a
+  loop over M APs.
+
+              a_mk_sq = sum(abs(a_k_mat).^2, 1).';   % M x 1
+
+  Compute ‖a_mk‖² for each AP m. abs(a_k_mat).^2 gives the element-wise squared
+  magnitude (since the entries are complex). sum(..., 1) sums down each column
+  (over N antennas), giving a 1 × M row. .' transposes to M × 1.
+
+  Physical meaning: ‖a_mk‖² tells you how much AP m contributes to user k's ZF
+  detector. ZF assigns larger weights to APs that need to work harder to cancel
+  interference. APs with collinear channel estimates to multiple users will have
+   larger ‖a_mk‖² — this is the noise amplification effect.
+
+              denom = sum(a_mk_sq .* (p.rho_u * err_m + 1));
+
+  The denominator of Eq. 15:
+
+  Σ_m ‖a_mk‖² · [ρ_u · Σ_i η_i·(β_{mi} − α_{mi}) + 1]
+
+  For each AP m, multiply ‖a_mk‖² by the term in brackets (data-SNR-scaled
+  estimation error + noise), then sum over all APs.
+
+  The two parts of the bracket:
+  - ρ_u · err_m: interference power from estimation errors at AP m, scaled by
+  data SNR
+  - + 1: normalized noise power
+
+              sinr_k = p.rho_u * eta(k) / denom;
+
+  Eq. 15: Numerator is ρ_u · η_k (desired signal power after ZF — the ZF
+  property gives |a_k^H · ĝ_k|² = 1, so the signal power is simply ρ_u · η_k).
+
+              R_sum(k) = R_sum(k) + log2(1 + sinr_k);
+
+  Accumulate the instantaneous rate log₂(1 + SINR_k) for this realization. We'll
+   average later.
+
+  Final averaging
+
+      R_ZF_mc = p.prelog * R_sum / p.num_channel_real;
+
+  Two operations:
+  1. Divide by num_channel_real: This computes E[log₂(1 + SINR_k)] — the ergodic
+   rate averaged over channel realizations.
+  2. Multiply by prelog: Apply (1 − τ/T) to account for pilot overhead.
+
+  Why average log₂(1 + SINR) and not log₂(1 + E[SINR])? Because of Jensen's
+  inequality: E[log(1 + X)] ≤ log(1 + E[X]) for concave log. The ergodic rate is
+   the average of the log, not the log of the average. This is a common pitfall.
+
+  ---
+  Step 9: main_fig2.m — Reproduce Figure 2
+
+  The big picture
+
+  This is the first complete simulation script and your first paper figure. It
+  validates the entire pipeline: params → setup → pilots → estimation → SE
+  computation. If the curves look reasonable and match the paper's Figure 2,
+  everything up to this point is working correctly.
+
+  Figure 2 shows: Sum spectral efficiency vs number of APs (M), with separate
+  curves for ZF and CB at N = 2, 4, 6.
+
+  Line-by-line
+
+  Configuration
+
+  clear; close all; clc;
+
+  Standard MATLAB cleanup: clear workspace, close all figures, clear command
+  window. Every simulation script starts with this.
+
+  p = params();
+
+  Load the default parameters. We'll override p.M and p.N in the loops.
+
+  M_vec      = 20:10:80;       % Number of APs to sweep
+  N_vec      = [2, 4, 6];      % Antennas per AP
+  num_setups = p.num_setups;    % Network realizations (default 100)
+
+  M_vec: The paper's Figure 2 x-axis. We sweep from 20 to 80 APs in steps of 10.
+
+  N_vec: Three curves per receiver type. The paper tests N = 2, 4, 6 to show how
+   multi-antenna APs improve performance.
+
+  num_setups = 100: Each point on the curve is the average over 100 random
+  network realizations (random user positions, random shadow fading). This gives
+   smooth, stable curves.
+
+  sum_rate_ZF = zeros(length(M_vec), length(N_vec));
+  sum_rate_CB = zeros(length(M_vec), length(N_vec));
+
+  Pre-allocate result matrices: 7 M-values × 3 N-values. We accumulate sum rates
+   here and divide by num_setups at the end.
+
+  The simulation loop — outer structure
+
+  for im = 1:length(M_vec)
+      p.M = M_vec(im);
+
+      for s = 1:num_setups
+          [beta, ~, ~] = generate_setup(p);
+          pilot_index = assign_pilots(p.K, p.tau);
+          [alpha, ~] = estimate_channel(beta, pilot_index, p);
+
+  Key optimization: beta and alpha do not depend on N. They depend only on M (AP
+   positions, path loss) and the pilot structure. So we generate the setup once
+  per (M, setup) combination and reuse it for all three N values. This:
+  1. Reduces computation by ~3×
+  2. Reduces variance: Same network realization is used for all N, so the N=2 vs
+   N=6 comparison is fair (same user positions, same shadow fading)
+
+  generate_setup(p) uses p.M for the grid placement. For M=20: a 5×5 grid
+  (taking first 20). For M=80: a 9×9 grid (taking first 80).
+
+  We discard ~ for ap_pos, ue_pos (not needed for SE computation) and for
+  c_coeff (not needed for closed-form SE — only the Monte Carlo function needs
+  it).
+
+  The simulation loop — inner N sweep
+
+          for in = 1:length(N_vec)
+              p.N = N_vec(in);
+
+              R_ZF = compute_SE_ZF(beta, alpha, pilot_index, p);
+              R_CB = compute_SE_CB(beta, alpha, pilot_index, p);
+
+              sum_rate_ZF(im, in) = sum_rate_ZF(im, in) + sum(R_ZF);
+              sum_rate_CB(im, in) = sum_rate_CB(im, in) + sum(R_CB);
+          end
+
+  For each N, compute both ZF and CB rates using the closed-form expressions
+  (Theorem 1 and Lemma 1). No Monte Carlo needed — that's the whole advantage of
+   having analytical expressions.
+
+  sum(R_ZF) gives the sum rate (total rate across all K users). We accumulate
+  this over setups and divide by num_setups later.
+
+  Where N enters the formulas:
+  - ZF (Eq. 18): Ω(k) = (N·S₁² − S₂)/S₁ — N directly scales the effective array
+  gain. Larger N → more degrees of freedom → higher Ω → higher rate.
+  - CB (Eq. 33): Non-coherent interference is divided by N, and noise is divided
+   by N·ρ_u. Larger N → less interference per antenna → higher SINR.
+
+  Progress reporting
+
+      fprintf('M = %d done (%d/%d)\n', M_vec(im), im, length(M_vec));
+
+  Prints progress after each M value is complete. Since we have 7 M values × 100
+   setups × 3 N values = 2100 evaluations of the SE functions, this helps track
+  progress. Each M value takes a few seconds.
+
+  Averaging
+
+  sum_rate_ZF = sum_rate_ZF / num_setups;
+  sum_rate_CB = sum_rate_CB / num_setups;
+
+  Convert accumulated sums to averages. Now sum_rate_ZF(im, in) is the expected
+  sum rate for M = M_vec(im) and N = N_vec(in).
+
+  Plotting
+
+  markers_ZF = {'-o', '-s', '-d'};
+  markers_CB = {'--o', '--s', '--d'};
+  colors     = {[0 0.45 0.74], [0.85 0.33 0.10], [0.47 0.67 0.19]};
+
+  Solid lines (-) for ZF, dashed lines (--) for CB. Three different marker
+  shapes (circle, square, diamond) for N = 2, 4, 6. Three distinct colors. This
+  follows the standard convention in wireless papers: different receiver types
+  use different line styles, different parameters use different markers/colors.
+
+  for in = 1:length(N_vec)
+      plot(M_vec, sum_rate_ZF(:, in), markers_ZF{in}, ...
+           'Color', colors{in}, 'LineWidth', 1.5, 'MarkerSize', 7, ...
+           'MarkerFaceColor', colors{in});
+      plot(M_vec, sum_rate_CB(:, in), markers_CB{in}, ...
+           'Color', colors{in}, 'LineWidth', 1.5, 'MarkerSize', 7);
+  end
+
+  Plot ZF (solid, filled markers) and CB (dashed, hollow markers) for each N.
+  Same color for same N value makes the ZF vs CB comparison easy to read
+  visually.
+
+  Summary printout
+
+  fprintf('N = %d:  ZF sum rate at M=60 = %.1f,  CB = %.1f,  ratio = %.2f\n',
+  ...
+
+  Prints the key numbers at M=60 (the paper's default) for quick validation
+  without reading the plot.
+
+  ---
+  Sanity check for Step 8 (Monte Carlo validation)
+
+  Run this before running main_fig2.m to validate that Theorem 1 is accurate:
+
+  p = params();
+  [beta, ~, ~] = generate_setup(p);
+  pilot_index = assign_pilots(p.K, p.tau);
+  [alpha, c_coeff] = estimate_channel(beta, pilot_index, p);
+
+  % Closed-form (Theorem 1)
+  R_ZF_cf = compute_SE_ZF(beta, alpha, pilot_index, p);
+
+  % Monte Carlo (Eq. 15, 300 realizations)
+  R_ZF_mc = compute_SE_ZF_montecarlo(beta, alpha, c_coeff, pilot_index, p);
+
+  % Compare
+  fprintf('--- Theorem 1 Validation (Figure 1) ---\n');
+  fprintf('User   Closed-form   Monte Carlo   Ratio\n');
+  for k = 1:p.K
+      fprintf('  %2d     %6.3f        %6.3f      %.4f\n', ...
+          k, R_ZF_cf(k), R_ZF_mc(k), R_ZF_cf(k)/R_ZF_mc(k));
+  end
+  fprintf('\nSum:     %6.2f        %6.2f      %.4f\n', ...
+      sum(R_ZF_cf), sum(R_ZF_mc), sum(R_ZF_cf)/sum(R_ZF_mc));
+
+  What you should see:
+  - The closed-form and Monte Carlo rates should be very close (ratio ≈
+  0.95–1.05)
+  - The closed-form is a tight lower bound (ratio ≤ 1.0 typically, since Theorem
+   1 uses Jensen's inequality and worst-case error bounds)
+  - This validates Figure 1 of the paper
+
+  Then run main_fig2.m to generate Figure 2. What the plot should show:
+
+  Trend: Sum rate increases with M
+  Why: More APs → more spatial diversity → higher rate
+  ────────────────────────────────────────
+  Trend: ZF > CB at every point
+  Why: ZF cancels interference, CB does not
+  ────────────────────────────────────────
+  Trend: N=6 >> N=4 > N=2
+  Why: More antennas per AP → more degrees of freedom
+  ────────────────────────────────────────
+  Trend: The gap ZF − CB grows with N
+  Why: ZF benefits more from extra antennas (better interference nulling)
+  ────────────────────────────────────────
+  Trend: Curves are roughly linear in M
+  Why: Rate scales approximately linearly with the number of APs
+
+  Run the Step 8 sanity check first, then main_fig2.m, and let me know your
+  results. Once Figure 2 looks right, the entire pipeline (Steps 1–9) is
+  validated.
+
+✻ Baked for 5m 4s
+
+❯ /export F:\Codes\Awesome-Wireless-Communications\paper 
+implementation\chat003_code_implementation_pt2.txt 
+  ⎿  Failed to export conversation: ENOENT: no such file or directory, open
+     'F:\Codes\Awesome-Wireless-Communications\F:\Codes\Awesome-Wireless-Communi
+     cations\paper implementation\chat003_code_implementation_pt2.txt'
