@@ -1,0 +1,9 @@
+
+# Folder
+/.claude
+
+# Papers - ignore PDFs but track the README with paper list
+papers/*.pdf
+papers/**/*.pdf
+
+*.asv
