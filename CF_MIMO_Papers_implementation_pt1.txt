@@ -1,0 +1,1104 @@
+
+╭─── Claude Code v2.1.63 ──────────────────────────────────────────────────────╮
+│                                                    │ Tips for getting        │
+│             Welcome back Tech Shottify!            │ started                 │
+│                                                    │ Run /init to create a … │
+│                       ▐▛███▜▌                      │ ─────────────────────── │
+│                      ▝▜█████▛▘                     │ Recent activity         │
+│                        ▘▘ ▝▝                       │ 1h ago  I want you to … │
+│                                                    │ 2d ago  Read @"chat/ch… │
+│               Opus 4.6 · Claude Max                │ /resume for more        │
+│   F:\Codes\Awesome-Wireless-Communications-Basic   │                         │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+❯ F:\Codes\Awesome-Wireless-Communications-Basic\papers\Cell-Free\001_All   
+  Paper(without review paper)                                               
+  Analysis this folder. Read the title of each files.                       
+  THese are papers related to Cell-free Massive MIMO.                       
+  Then, do deep research and create a list of 10 papers which I will try to 
+   reproduce using my own. You will choose these 9 papers based on these    
+  criteria:                                                                 
+  1. After implementing or reproducing the results of the papers, I will    
+  have a solid understanding on theory, basic and mathematics related to    
+  cell-free massive mimo in such a way so that I can do my own novel        
+  research on this domain.                                                  
+  2. These are bench marks papers in this domain. All the papers must be    
+  published to respected Q1 journals and have high citations or if newly    
+  published, then the authors are famous and pioneer in this field.         
+  3. You will choice papers so that it covers these topics, papers on core  
+  cell-free MIMO (meaning papers which are fundamental to understand these  
+  domain), paper on beamforming of cell-free MIMO, Papers related to DL in  
+  beamforming of Cell-free MIMO. You will choice at least 3 from each       
+  catagory.                                                                 
+  ------------------------                                                  
+  Primarily focus on papers on these given folder, but if you find any      
+  important papers is missing that I must reproduce to grasp a firm         
+  understanding and in depth knowledge of this domain, then include those   
+  papers also.                                                              
+
+● Let me start by exploring the folder to see all the papers, then do deep
+  research on the topic.
+
+● Read 1 file (ctrl+o to expand)
+
+● Now let me do deep research on Cell-Free Massive MIMO to identify the most
+  important benchmark papers and understand the landscape.
+
+● Agent(Research Cell-Free MIMO papers)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+● Agent(Research DL beamforming CF-MIMO)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+● I've launched two deep research agents in the background to:
+
+  1. Agent 1: Research the foundational, beamforming, and citation details for
+  all papers in your folder
+  2. Agent 2: Research DL-based beamforming papers, missing essential papers,
+  and recommended reading order
+
+  I'll compile the final curated list of 10 papers once both research agents
+  complete. This will take a few minutes — I'll present the results as soon as
+  they're ready.
+
+● Task Output af3c14ba75fc921c8
+  ⎿  Task is still running…
+
+● Task Output af3c14ba75fc921c8
+  ⎿  No task output available
+
+● Agent "Research DL beamforming CF-MIMO" completed
+
+● Agent "Research Cell-Free MIMO papers" completed
+
+● Both research agents have completed. Let me now compile the final curated
+  list.
+
+  ---
+  Cell-Free Massive MIMO: 10 Papers to Reproduce for Mastery
+
+  Your folder contains 41 papers. After deep research on citations, journal
+  rankings, author reputation, and pedagogical value, here is the curated list
+  of 10 papers organized as a progressive learning path across three categories.
+
+  ---
+  Category A: Core Cell-Free MIMO (Foundational Theory)
+
+  Paper 1 — THE Founding Paper
+
+  "Cell-Free Massive MIMO Versus Small Cells"
+  - Authors: H. Q. Ngo, A. Ashikhmin, H. Yang, E. G. Larsson, T. L. Marzetta
+  - Journal: IEEE Trans. Wireless Commun. (Q1, IF: 10.7) | 2017 | ~1,860
+  citations
+  - In your folder: Yes
+  - What you'll learn: The entire CF-mMIMO system model, TDD protocol, conjugate
+   beamforming baseline, max-min power control, CDF comparison vs small cells
+  - Why reproduce: Every single CF-MIMO paper cites this. You cannot skip it.
+  - Code: Available on GitHub (emilbjornson)
+
+  Paper 2 — The Paradigm Shift to MMSE
+
+  "Making Cell-Free Massive MIMO Competitive With MMSE Processing and 
+  Centralized Implementation"
+  - Authors: E. Bjornson, L. Sanguinetti
+  - Journal: IEEE Trans. Wireless Commun. (Q1) | 2020 | ~700+ citations | 2022 
+  IEEE Marconi Prize Winner
+  - In your folder: Yes
+  - What you'll learn: The 4 cooperation levels (L1-L4), local/global MMSE
+  combining, why CB alone is insufficient, centralized vs distributed processing
+  - Why reproduce: This paper redefined the field. The Level 1-4 framework is
+  now the standard way to categorize CF-MIMO implementations.
+  - Code: https://github.com/emilbjornson/competitive-cell-free
+
+  Paper 3 — Scalability Framework
+
+  "Scalable Cell-Free Massive MIMO Systems"
+  - Authors: E. Bjornson, L. Sanguinetti
+  - Journal: IEEE Trans. Commun. (Q1, IF: ~8.3) | 2020 | ~500+ citations
+  - In your folder: Yes
+  - What you'll learn: Dynamic Cooperation Clusters (DCC), user-centric
+  clustering, scalable pilot assignment, what "scalable" formally means for
+  CF-MIMO
+  - Why reproduce: Original CF-MIMO assumed every AP serves every user (not
+  scalable). This paper solved that critical gap.
+  - Code: https://github.com/emilbjornson/scalable-cell-free
+
+  Paper 4 — Energy Efficiency (NOT in your folder, but essential)
+
+  "Foundations of User-Centric Cell-Free Massive MIMO" (Monograph/Textbook)
+  - Authors: O. T. Demir, E. Bjornson, L. Sanguinetti
+  - Publication: Foundations and Trends in Signal Processing, 311 pages | 2021 |
+   ~500+ citations
+  - In your folder: NO — CRITICALLY MISSING
+  - What you'll learn: EVERYTHING — channel estimation (MMSE, LS, EW-MMSE), all
+  combining/precoding schemes (MR, L-MMSE, P-MMSE, centralized MMSE, CB, FZF,
+  P-RZF), power control, DCC, pilot assignment
+  - Why reproduce: This IS the textbook. Reproducing select figures will
+  solidify your entire theoretical foundation.
+  - Code: https://github.com/emilbjornson/cell-free-book (full MATLAB)
+  - Get it from: https://arxiv.org/abs/2108.02541 (free)
+
+  ---
+  Category B: Beamforming in Cell-Free MIMO
+
+  Paper 5 — ZF and CB Analysis
+
+  "Cell-Free Massive MIMO: Zero Forcing and Conjugate Beamforming Receivers"
+  - Authors: Y. Zhang, H. Cao, M. Zhou, L. Yang
+  - Journal: J. of Commun. and Networks | 2019 | ~80 citations
+  - In your folder: Yes
+  - What you'll learn: Closed-form ZF receiver SE, comparison with CB, SCA-based
+   & GP-based power control, impact of multi-antenna APs and pilot contamination
+  - Why reproduce: Extends Paper 1 from CB-only to ZF, completing the classical
+  beamforming picture
+
+  Paper 6 — Optimal Beamforming Upper Bound
+
+  "Max-Min Optimal Beamforming for Cell-Free Massive MIMO"
+  - Authors: A. Zhou, J. Wu, E. G. Larsson, P. Fan
+  - Journal: IEEE Commun. Letters | 2020 | ~100 citations
+  - In your folder: Yes
+  - What you'll learn: Theoretical optimum beamformer via SOCP, quasi-concavity
+  of max-min SINR, how to benchmark all practical schemes against the optimal
+  - Why reproduce: Provides the performance ceiling — you need this to evaluate
+  how good CB/ZF/MMSE really are
+
+  Paper 7 — mmWave Extension with Hybrid Beamforming
+
+  "Cell-Free Millimeter-Wave Massive MIMO Systems With Limited Fronthaul 
+  Capacity"
+  - Authors: G. Femenias, F. Riera-Palou
+  - Journal: IEEE Access (Q1) | 2019 | ~100 citations
+  - In your folder: Yes
+  - What you'll learn: Hybrid analog-digital beamforming for CF-mmWave,
+  fronthaul compression/quantization, pilot allocation with clustering,
+  extending CF-MIMO beyond sub-6GHz
+  - Why reproduce: Bridges sub-6GHz CF-MIMO theory to mmWave — essential for
+  understanding hybrid beamforming in the CF context
+
+  ---
+  Category C: Deep Learning for Beamforming in Cell-Free MIMO
+
+  Paper 8 — Unsupervised Learning for Beamforming
+
+  "Decentralized Beamforming for Cell-Free Massive MIMO With Unsupervised 
+  Learning"
+  - Authors: H. Hojatian, J. Nadal, J.-F. Frigon, F. Leduc-Primeau
+  - Journal: IEEE Commun. Letters (Q1) | 2022 | ~50+ citations
+  - In your folder: Yes
+  - What you'll learn: Unsupervised DNN for decentralized beamforming, fully
+  distributed vs partially distributed architectures, 10-24x complexity
+  reduction vs optimization-based methods
+  - Why reproduce: THE gateway paper from classical to DL-based beamforming in
+  CF-MIMO. Has public code.
+  - Code: https://github.com/HamedHojatian/CF-mMIMO-HBF
+
+  Paper 9 — Deep Reinforcement Learning for Beamforming
+
+  "Distributed Beamforming Techniques for Cell-Free Wireless Networks Using Deep
+   Reinforcement Learning"
+  - Authors: F. Fredj, Y. F. Al-Eryani, S. Maghsudi, M. Akrout, E. Hossain
+  - Journal: IEEE Trans. Cognitive Commun. & Networking (Q1, IF: ~8.6) | 2022 |
+  ~40+ citations
+  - In your folder: Yes
+  - What you'll learn: DDPG and D4PG for uplink beamforming, centralized vs
+  distributed DRL, multi-agent RL for wireless, how distributed experience
+  collection helps convergence
+  - Why reproduce: The definitive DRL paper for CF-MIMO beamforming — different
+  paradigm from unsupervised (Paper 8)
+
+  Paper 10 — Hybrid Knowledge-Data Driven (State-of-the-Art)
+
+  "Hybrid Knowledge-Data Driven Channel Semantic Acquisition and Beamforming for
+   Cell-Free Massive MIMO"
+  - Authors: Z. Gao, S. Liu, Y. Su, Z. Li, D. Zheng
+  - Journal: IEEE J. Selected Topics in Signal Processing (Q1, TOP journal) |
+  2023 | ~15-20 citations
+  - In your folder: Yes
+  - What you'll learn: MLP-Mixer autoencoder for channel semantic acquisition,
+  deep-unfolding beamformer (unrolling WMMSE into NN layers), hybrid model-based
+   + data-driven design, robustness to imperfect CSI
+  - Why reproduce: Represents the cutting-edge "best of both worlds" approach —
+  combining domain knowledge with deep learning
+
+  ---
+  Recommended Reproduction Order
+
+  Phase 1: Theory Foundation (Papers 1 → 2 → 4 → 3)
+     │
+     ├─ Paper 1: System model + CB baseline
+     ├─ Paper 2: MMSE processing + 4 cooperation levels
+     ├─ Paper 4: Complete textbook (select key figures)
+     └─ Paper 3: Scalability + DCC clustering
+     │
+  Phase 2: Beamforming Techniques (Papers 5 → 6 → 7)
+     │
+     ├─ Paper 5: ZF receiver analysis
+     ├─ Paper 6: Optimal beamforming bound (SOCP)
+     └─ Paper 7: mmWave hybrid beamforming
+     │
+  Phase 3: DL-Based Beamforming (Papers 8 → 9 → 10)
+     │
+     ├─ Paper 8: Unsupervised learning (entry point to DL)
+     ├─ Paper 9: Deep RL (DDPG/D4PG)
+     └─ Paper 10: Deep unfolding + hybrid approach (state-of-art)
+
+  Critical Missing Paper
+
+  You MUST download Paper 4 — "Foundations of User-Centric Cell-Free Massive
+  MIMO" by Demir, Bjornson & Sanguinetti. It is:
+  - Free on arXiv: arxiv.org/abs/2108.02541
+  - 311 pages covering the entire field
+  - Has complete MATLAB code on GitHub
+  - Written by the top 3 researchers in this domain
+
+  After reproducing these 10 papers in order, you will have mastered:
+  - The complete theoretical framework of CF-mMIMO
+  - All classical beamforming schemes (CB, ZF, MMSE, optimal)
+  - Scalability and practical deployment considerations
+  - Three distinct DL paradigms (unsupervised, DRL, deep unfolding)
+
+  This positions you to identify research gaps and pursue novel contributions in
+   DL-based beamforming for Cell-Free Massive MIMO.
+
+✻ Cooked for 7m 29s
+
+❯ F:\Codes\Awesome-Wireless-Communications-Basic\papers\Cell-Free\001_All   
+  Paper(without review paper)                                               
+  Analysis this folder. Read the title of each files.                       
+  THese are papers related to Cell-free Massive MIMO.                       
+  Then, do deep research and create a list of 20 papers which I will try to 
+   reproduce using my own. You will choose these 9 papers based on these    
+  criteria:                                                                 
+  1. After implementing or reproducing the results of the papers, I will    
+  have a solid understanding on theory, basic and mathematics related to    
+  cell-free massive mimo in such a way so that I can do my own novel        
+  research on this domain.                                                  
+  2. These are bench marks papers in this domain. All the papers must be    
+  published to respected Q1 journals and have high citations or if newly    
+  published, then the authors are famous and pioneer in this field.         
+  3. You will choice papers so that it covers these topics, papers on core  
+  cell-free MIMO (meaning papers which are fundamental to understand these  
+  domain), paper on beamforming of cell-free MIMO, Papers related to DL in  
+  beamforming of Cell-free MIMO. You will choice at least 5 from each       
+  catagory.                                                                 
+  ------------------------                                                  
+  Primarily focus on papers on these given folder, but if you find any      
+  important papers is missing that I must reproduce to grasp a firm         
+  understanding and in depth knowledge of this domain, then include those   
+  papers also.                                                              
+
+● Let me re-analyze the folder and do comprehensive deep research for a 20-paper
+   list.
+
+● Read 3 files (ctrl+o to expand)
+
+● Good — 41 papers in the main folder + 7 in the DL subfolder. Now let me launch
+   deep research agents in parallel.
+
+● 3 Agent agents launched (ctrl+o to expand)
+   ├─ Research core CF-MIMO papers
+   │  ⎿  Running in the background
+   ├─ Research beamforming CF-MIMO papers
+   │  ⎿  Running in the background
+   └─ Research DL beamforming CF-MIMO
+      ⎿  Running in the background
+
+● Three deep research agents are running in parallel:
+  1. Agent 1: Core/foundational CF-MIMO papers + missing essential papers
+  2. Agent 2: Classical & hybrid beamforming papers for CF-MIMO
+  3. Agent 3: Deep learning for beamforming in CF-MIMO + open research gaps
+
+  I'll compile the final 20-paper list once all three complete. This will take a
+   few minutes.
+
+● Task Output a273e4cabd55064fb
+  ⎿  Task is still running…
+
+● Agent "Research beamforming CF-MIMO papers" completed
+
+● Task Output a273e4cabd55064fb
+  ⎿  No task output available
+
+● Agent "Research core CF-MIMO papers" completed
+
+● Task Output a9a824016d47b02d0
+  ⎿  No task output available
+
+● Agent "Research DL beamforming CF-MIMO" completed
+
+● All three research agents have completed. Let me compile the definitive
+  20-paper list.
+
+  ---
+  Cell-Free Massive MIMO: 20 Papers to Reproduce for Mastery
+
+  Your folder: 41 papers analyzed | Selection: 14 from your folder + 6
+  critically missing papers
+
+  ---
+  CATEGORY A: Core Cell-Free MIMO — Foundations (6 Papers)
+
+  ---
+  Paper 1 — THE Founding Paper
+
+  "Cell-Free Massive MIMO Versus Small Cells"
+
+  ┌────────────────┬────────────────────────────────────────────────────────┐
+  │                │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Authors        │ H. Q. Ngo, A. Ashikhmin, H. Yang, E. G. Larsson, T. L. │
+  │                │  Marzetta                                              │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Journal        │ IEEE Trans. Wireless Commun. (Q1, IF: 10.7)            │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Year /         │ 2017 / ~1,500+                                         │
+  │ Citations      │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ In your        │ Yes                                                    │
+  │ folder?        │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Code           │ https://arxiv.org/abs/1602.08232                       │
+  └────────────────┴────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: System model with distributed single-antenna APs, TDD
+  protocol, conjugate beamforming (CB) uplink/downlink, max-min power control,
+  CDF of per-user throughput vs. small cells.
+
+  What you'll learn: The entire CF-mMIMO system model from scratch — channel
+  estimation, pilot contamination, coherent transmission, favorable propagation,
+   and why cell-free eliminates cell edges.
+
+  ---
+  Paper 2 — THE Textbook (Monograph)
+
+  "Foundations of User-Centric Cell-Free Massive MIMO"
+
+  ┌──────────────┬──────────────────────────────────────────────────────────┐
+  │              │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Authors      │ O. T. Demir, E. Bjornson, L. Sanguinetti                 │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Publication  │ Foundations & Trends in Signal Processing (311 pages)    │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Year /       │ 2021 / ~600+                                             │
+  │ Citations    │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ In your      │ NO — CRITICALLY MISSING                                  │
+  │ folder?      │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Code         │ https://github.com/emilbjornson/cell-free-book (MATLAB,  │
+  │              │ reproduces ALL figures)                                  │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Get it free  │ https://arxiv.org/abs/2108.02541                         │
+  └──────────────┴──────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Select key figures comparing MR vs L-MMSE vs P-MMSE vs
+  centralized MMSE, all 4 cooperation levels, downlink precoding (CB, FZF,
+  P-RZF, centralized RZF), power control algorithms.
+
+  What you'll learn: EVERYTHING — the complete mathematical toolkit for
+  CF-mMIMO. This is the single most important resource in the entire field.
+
+  ---
+  Paper 3 — The Paradigm Shift to MMSE
+
+  "Making Cell-Free Massive MIMO Competitive With MMSE Processing and 
+  Centralized Implementation"
+
+  ┌──────────────┬──────────────────────────────────────────────────────────┐
+  │              │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Authors      │ E. Bjornson, L. Sanguinetti                              │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Journal      │ IEEE Trans. Wireless Commun. (Q1)                        │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Year /       │ 2020 / ~700+ / 2022 IEEE Marconi Prize Winner            │
+  │ Citations    │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ In your      │ Yes                                                      │
+  │ folder?      │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Code         │ https://github.com/emilbjornson/competitive-cell-free    │
+  │              │ (MATLAB)                                                 │
+  └──────────────┴──────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: The 4 cooperation levels (L1–L4), local vs global MMSE
+  combining, SE comparison against cellular mMIMO and small cells under
+  spatially correlated Rayleigh fading.
+
+  What you'll learn: Why CB/MR alone is insufficient — CF-MIMO only truly
+  outperforms cellular when using MMSE. The Level 1-4 framework is now THE
+  standard way to classify CF-MIMO implementations.
+
+  ---
+  Paper 4 — Scalability Framework
+
+  "Scalable Cell-Free Massive MIMO Systems"
+
+  ┌───────────────┬─────────────────────────────────────────────────────────┐
+  │               │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Authors       │ E. Bjornson, L. Sanguinetti                             │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Journal       │ IEEE Trans. Commun. (Q1, IF: ~8.3)                      │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Year /        │ 2020 / ~500+                                            │
+  │ Citations     │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ In your       │ Yes                                                     │
+  │ folder?       │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Code          │ https://github.com/emilbjornson/scalable-cell-free      │
+  │               │ (MATLAB)                                                │
+  └───────────────┴─────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Dynamic Cooperation Clusters (DCC), user-centric AP
+  selection, scalable pilot assignment, cluster formation algorithms.
+
+  What you'll learn: The original CF-MIMO assumes every AP serves every user
+  (doesn't scale). This paper solves that with DCC — essential for any practical
+   implementation.
+
+  ---
+  Paper 5 — Energy Efficiency
+
+  "On the Total Energy Efficiency of Cell-Free Massive MIMO"
+
+  ┌────────────┬────────────────────────────────────────────────────────────┐
+  │            │                                                            │
+  ├────────────┼────────────────────────────────────────────────────────────┤
+  │ Authors    │ H. Q. Ngo, L.-N. Tran, T. Q. Duong, M. Matthaiou, E. G.    │
+  │            │ Larsson                                                    │
+  ├────────────┼────────────────────────────────────────────────────────────┤
+  │ Journal    │ IEEE Trans. Green Commun. & Networking (Q1)                │
+  ├────────────┼────────────────────────────────────────────────────────────┤
+  │ Year /     │ 2018 / ~500+                                               │
+  │ Citations  │                                                            │
+  ├────────────┼────────────────────────────────────────────────────────────┤
+  │ In your    │ Yes                                                        │
+  │ folder?    │                                                            │
+  ├────────────┼────────────────────────────────────────────────────────────┤
+  │ Code       │ https://github.com/tranlenam/cellfreeMIMOenergyefficiency  │
+  │            │ (MATLAB)                                                   │
+  └────────────┴────────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Closed-form SE with channel estimation errors, optimal
+  power allocation maximizing total EE subject to per-user QoS and per-AP power
+  constraints, AP selection for EE improvement.
+
+  What you'll learn: How to analyze energy efficiency (not just spectral
+  efficiency) — critical for 6G green communications. Power consumption modeling
+   including backhaul.
+
+  ---
+  Paper 6 — ZF Precoding Foundation (MISSING)
+
+  "Precoding and Power Optimization in Cell-Free Massive MIMO Systems"
+
+  ┌─────────────────┬───────────────────────────────────────────────────────┐
+  │                 │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Authors         │ E. Nayebi, A. Ashikhmin, T. L. Marzetta, H. Yang, B.  │
+  │                 │ D. Rao                                                │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Journal         │ IEEE Trans. Wireless Commun. (Q1)                     │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Year /          │ 2017 / ~500–600                                       │
+  │ Citations       │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ In your folder? │ NO — MISSING                                          │
+  └─────────────────┴───────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Zero-forcing precoding for CF-MIMO downlink,
+  near-optimal max-min power control, comparison showing ZF provides 5-10x
+  throughput improvement over small cells.
+
+  What you'll learn: The companion to Paper 1 (which uses CB). Together they
+  establish both fundamental precoding approaches — CB and ZF — for CF-MIMO.
+
+  ---
+  CATEGORY B: Beamforming in Cell-Free MIMO (7 Papers)
+
+  ---
+  Paper 7 — Modified Conjugate Beamforming
+
+  "Modified Conjugate Beamforming for Cell-Free Massive MIMO"
+
+  ┌──────────────────┬──────────────────────────────────────┐
+  │                  │                                      │
+  ├──────────────────┼──────────────────────────────────────┤
+  │ Authors          │ M. Attarifar, A. Abbasfar, A. Lozano │
+  ├──────────────────┼──────────────────────────────────────┤
+  │ Journal          │ IEEE Wireless Commun. Letters (Q1)   │
+  ├──────────────────┼──────────────────────────────────────┤
+  │ Year / Citations │ 2019 / ~130+                         │
+  ├──────────────────┼──────────────────────────────────────┤
+  │ In your folder?  │ Yes                                  │
+  └──────────────────┴──────────────────────────────────────┘
+
+  What you'll reproduce: Modified CB that eliminates downlink self-interference
+  without requiring forward pilots or matrix inversions. Performance comparison
+  with standard CB.
+
+  What you'll learn: How to improve CB with minimal added complexity — a
+  practically important low-overhead enhancement.
+
+  ---
+  Paper 8 — Enhanced Normalized CB
+
+  "Enhanced Normalized Conjugate Beamforming for Cell-Free Massive MIMO"
+
+  ┌──────────────────┬──────────────────────────────────────────┐
+  │                  │                                          │
+  ├──────────────────┼──────────────────────────────────────────┤
+  │ Authors          │ G. Interdonato, H. Q. Ngo, E. G. Larsson │
+  ├──────────────────┼──────────────────────────────────────────┤
+  │ Journal          │ IEEE Trans. Commun. (Q1)                 │
+  ├──────────────────┼──────────────────────────────────────────┤
+  │ Year / Citations │ 2021 / ~70+                              │
+  ├──────────────────┼──────────────────────────────────────────┤
+  │ In your folder?  │ Yes                                      │
+  ├──────────────────┼──────────────────────────────────────────┤
+  │ arXiv            │ https://arxiv.org/abs/2101.10363         │
+  └──────────────────┴──────────────────────────────────────────┘
+
+  What you'll reproduce: ECB precoding (conjugate normalized by squared norm),
+  exact closed-form downlink SE with channel estimation errors and pilot reuse.
+
+  What you'll learn: Middle ground between CB and ZF in the
+  complexity-performance tradeoff. Together with Papers 7 and 6, you complete
+  the CB → Modified CB → ECB → ZF → MMSE progression.
+
+  ---
+  Paper 9 — Local Partial Zero-Forcing (MISSING)
+
+  "Local Partial Zero-Forcing Precoding for Cell-Free Massive MIMO"
+
+  ┌─────────────────┬───────────────────────────────────────────────────────┐
+  │                 │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Authors         │ G. Interdonato, M. Karlsson, E. Bjornson, E. G.       │
+  │                 │ Larsson                                               │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Journal         │ IEEE Trans. Wireless Commun. (Q1)                     │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Year /          │ 2020 / ~200+                                          │
+  │ Citations       │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ In your folder? │ NO — MISSING                                          │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ arXiv           │ https://arxiv.org/abs/1909.01034                      │
+  └─────────────────┴───────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Local PZF and Protective PZF (PPZF) distributed
+  precoding, adaptable tradeoff between interference cancellation and signal
+  boosting, closed-form SE under Rayleigh fading.
+
+  What you'll learn: THE landmark distributed precoding paper. PZF/PPZF
+  substantially outperform MRT and match RZF performance with much lower
+  complexity and no centralized processing.
+
+  ---
+  Paper 10 — Optimal Beamforming Upper Bound
+
+  "Max-Min Optimal Beamforming for Cell-Free Massive MIMO"
+
+  ┌──────────────────┬───────────────────────────────────────┐
+  │                  │                                       │
+  ├──────────────────┼───────────────────────────────────────┤
+  │ Authors          │ A. Zhou, J. Wu, E. G. Larsson, P. Fan │
+  ├──────────────────┼───────────────────────────────────────┤
+  │ Journal          │ IEEE Commun. Letters (Q1)             │
+  ├──────────────────┼───────────────────────────────────────┤
+  │ Year / Citations │ 2020 / ~100+                          │
+  ├──────────────────┼───────────────────────────────────────┤
+  │ In your folder?  │ Yes                                   │
+  ├──────────────────┼───────────────────────────────────────┤
+  │ arXiv            │ https://arxiv.org/abs/2006.05598      │
+  └──────────────────┴───────────────────────────────────────┘
+
+  What you'll reproduce: Optimal beamformer via SOCP, quasi-concavity proof of
+  max-min SINR, bisection search algorithm.
+
+  What you'll learn: The theoretical performance ceiling. After reproducing
+  this, you can benchmark every practical scheme (CB, ZF, MMSE, DL-based)
+  against the optimum.
+
+  ---
+  Paper 11 — mmWave with Hybrid Beamforming & Fronthaul
+
+  "Cell-Free Millimeter-Wave Massive MIMO Systems With Limited Fronthaul 
+  Capacity"
+
+  ┌──────────────────┬──────────────────────────────────┐
+  │                  │                                  │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Authors          │ G. Femenias, F. Riera-Palou      │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Journal          │ IEEE Access (Q1)                 │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Year / Citations │ 2019 / ~130+                     │
+  ├──────────────────┼──────────────────────────────────┤
+  │ In your folder?  │ Yes                              │
+  ├──────────────────┼──────────────────────────────────┤
+  │ arXiv            │ https://arxiv.org/abs/1902.07503 │
+  └──────────────────┴──────────────────────────────────┘
+
+  What you'll reproduce: Hybrid analog-digital beamforming architecture for
+  CF-mmWave, fronthaul capacity constraints with quantization, pilot allocation
+  via clustering.
+
+  What you'll learn: How to extend CF-MIMO from sub-6GHz to mmWave bands where
+  hybrid beamforming is mandatory. The interplay between limited fronthaul and
+  HBF design.
+
+  ---
+  Paper 12 — User-Centric Resource Allocation
+
+  "Downlink Resource Allocation in Multiuser Cell-Free MIMO Networks With 
+  User-Centric Clustering"
+
+  ┌───────────────┬─────────────────────────────────────────────────────────┐
+  │               │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Authors       │ H. A. Ammar, R. Adve, S. Shahbazpanahi, G. Boudreau, K. │
+  │               │  V. Srinivas                                            │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Journal       │ IEEE Trans. Wireless Commun. (Q1)                       │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ Year /        │ 2022 / ~80+                                             │
+  │ Citations     │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ In your       │ Yes                                                     │
+  │ folder?       │                                                         │
+  ├───────────────┼─────────────────────────────────────────────────────────┤
+  │ arXiv         │ https://arxiv.org/abs/2108.06316                        │
+  └───────────────┴─────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Joint user scheduling + power allocation + beamforming
+  weights under user-centric clustering. Both coherent and non-coherent
+  transmission modes. Fractional programming and block coordinate descent.
+
+  What you'll learn: The complete resource allocation pipeline for practical
+  CF-MIMO deployment — arguably the most comprehensive single paper on this
+  topic.
+
+  ---
+  Paper 13 — Uplink mmWave HBF with RF Chain Activation
+
+  "Hybrid Beamforming and Adaptive RF Chain Activation for Uplink Cell-Free 
+  Millimeter-Wave Massive MIMO Systems"
+
+  ┌──────┬──────────────────────────────────────────────────────────────────┐
+  │      │                                                                  │
+  ├──────┼──────────────────────────────────────────────────────────────────┤
+  │ Auth │ N. T. Nguyen, K. Lee, H. Dai                                     │
+  │ ors  │                                                                  │
+  ├──────┼──────────────────────────────────────────────────────────────────┤
+  │ Jour │ IEEE Trans. Vehicular Technology (Q1)                            │
+  │ nal  │                                                                  │
+  ├──────┼──────────────────────────────────────────────────────────────────┤
+  │ Year │                                                                  │
+  │  / C │ 2022 / ~40+                                                      │
+  │ itat │                                                                  │
+  │ ions │                                                                  │
+  ├──────┼──────────────────────────────────────────────────────────────────┤
+  │ In   │                                                                  │
+  │ your │ Yes                                                              │
+  │  fol │                                                                  │
+  │ der? │                                                                  │
+  ├──────┼──────────────────────────────────────────────────────────────────┤
+  │ Code │ https://github.com/nhanng9115/Hybrid-Beamforming-and-Adaptive-RF │
+  │      │ -Chain-Activation-for-Cell-Free-Millimeter-Wave-Massive-MIMO     │
+  └──────┴──────────────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Decentralized HBF (D-HBF) and semi-centralized HBF
+  (SC-HBF), adaptive RF chain activation (ARFA) for power savings, uplink SE
+  analysis.
+
+  What you'll learn: Practical HBF design with energy-aware RF chain management
+  — code available makes reproduction straightforward.
+
+  ---
+  CATEGORY C: Deep Learning for Beamforming in Cell-Free MIMO (7 Papers)
+
+  ---
+  Paper 14 — Pioneer DL Paper for CF-MIMO (MISSING)
+
+  "Exploiting Deep Learning in Limited-Fronthaul Cell-Free Massive MIMO Uplink"
+
+  ┌──────────────┬──────────────────────────────────────────────────────────┐
+  │              │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Authors      │ M. Bashar, K. Cumanan, A. G. Burr, H. Q. Ngo, M. Debbah, │
+  │              │  P. Xiao                                                 │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Journal      │ IEEE J. Selected Areas in Commun. (Q1, IF: ~16 — THE     │
+  │              │ most prestigious IEEE ComSoc journal)                    │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ Year /       │ 2020 / ~130+                                             │
+  │ Citations    │                                                          │
+  ├──────────────┼──────────────────────────────────────────────────────────┤
+  │ In your      │ NO — MISSING                                             │
+  │ folder?      │                                                          │
+  └──────────────┴──────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Deep CNN mapping large-scale fading coefficients to
+  optimal power allocations under quantized fronthaul. MMSE combining with
+  fronthaul compression.
+
+  What you'll learn: THE pioneering work applying DL to CF-MIMO. Published in
+  JSAC — the most impactful venue. Bridges the practical fronthaul limitation
+  with DL-based optimization.
+
+  ---
+  Paper 15 — DL Power Allocation from Bjornson's Group (MISSING)
+
+  "Learning-Based Downlink Power Allocation in Cell-Free Massive MIMO Systems"
+
+  ┌─────────────┬────────────────────────────────────────────────────────────┐
+  │             │                                                            │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ Authors     │ M. Zaher, O. T. Demir, E. Bjornson, M. Petrova             │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ Journal     │ IEEE Trans. Wireless Commun. (Q1)                          │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ Year /      │ 2023 / ~80+                                                │
+  │ Citations   │                                                            │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ In your     │ NO — MISSING                                               │
+  │ folder?     │                                                            │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ Code        │ https://github.com/emilbjornson/power-allocation-cell-free │
+  ├─────────────┼────────────────────────────────────────────────────────────┤
+  │ arXiv       │ https://arxiv.org/abs/2109.03128                           │
+  └─────────────┴────────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: DNN-based downlink power allocation with MR and RZF
+  precoding. Max-sum-SE and proportional fairness objectives. Scalable
+  architecture learning from large-scale fading coefficients.
+
+  What you'll learn: The most rigorous DL power control paper from the core
+  CF-MIMO research group. Uses the standard framework from the monograph (Paper
+  2), making it the natural bridge from theory to DL.
+
+  ---
+  Paper 16 — Unsupervised Learning for Decentralized Beamforming
+
+  "Decentralized Beamforming for Cell-Free Massive MIMO With Unsupervised 
+  Learning"
+
+  ┌─────────────────┬───────────────────────────────────────────────────────┐
+  │                 │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Authors         │ H. Hojatian, J. Nadal, J.-F. Frigon, F. Leduc-Primeau │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Journal         │ IEEE Commun. Letters                                  │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Year /          │ 2022 / ~50+                                           │
+  │ Citations       │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ In your folder? │ Yes                                                   │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Code            │ https://github.com/HamedHojatian/CF-mMIMO-HBF         │
+  │                 │ (Python)                                              │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ arXiv           │ https://arxiv.org/abs/2106.16194                      │
+  └─────────────────┴───────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Two unsupervised DNN architectures (fully distributed +
+   partially distributed) for decentralized coordinated beamforming. Both fully
+  digital and hybrid precoding. 10-24x complexity reduction.
+
+  What you'll learn: How to design unsupervised loss functions that directly
+  encode optimization objectives (sum-rate maximization) — no need for labeled
+  optimal solutions. The gateway from classical to DL-based beamforming.
+
+  ---
+  Paper 17 — Deep Reinforcement Learning for Beamforming
+
+  "Distributed Beamforming Techniques for Cell-Free Wireless Networks Using Deep
+   Reinforcement Learning"
+
+  ┌────────────────┬────────────────────────────────────────────────────────┐
+  │                │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Authors        │ F. Fredj, Y. F. Al-Eryani, S. Maghsudi, M. Akrout, E.  │
+  │                │ Hossain                                                │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Journal        │ IEEE Trans. Cognitive Commun. & Networking (Q1, IF:    │
+  │                │ ~8.6)                                                  │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Year /         │ 2022 / ~60+                                            │
+  │ Citations      │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ In your        │ Yes                                                    │
+  │ folder?        │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ arXiv          │ https://arxiv.org/abs/2006.15138                       │
+  └────────────────┴────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: DDPG for centralized uplink beamforming, D4PG with
+  distributed experience collection from APs, comparison of centralized vs
+  distributed DRL.
+
+  What you'll learn: A completely different DL paradigm from Paper 16 —
+  reinforcement learning instead of supervised/unsupervised. How multi-agent RL
+  maps to the distributed CF-MIMO architecture.
+
+  ---
+  Paper 18 — Hierarchical DRL for Self-Organizing mmWave CF-MIMO
+
+  "Self-Organizing mmWave MIMO Cell-Free Networks With Hybrid Beamforming: A 
+  Hierarchical DRL-Based Design"
+
+  ┌──────────────────┬──────────────────────────────────┐
+  │                  │                                  │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Authors          │ Y. F. Al-Eryani, E. Hossain      │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Journal          │ IEEE Trans. Commun. (Q1)         │
+  ├──────────────────┼──────────────────────────────────┤
+  │ Year / Citations │ 2022 / ~45+                      │
+  ├──────────────────┼──────────────────────────────────┤
+  │ In your folder?  │ Yes                              │
+  ├──────────────────┼──────────────────────────────────┤
+  │ arXiv            │ https://arxiv.org/abs/2103.11823 │
+  └──────────────────┴──────────────────────────────────┘
+
+  What you'll reproduce: Hierarchical DRL that jointly solves: (1) dynamic AP-UE
+   network partitioning, (2) analog beamsteering via DRL, (3) digital
+  beamforming via convex optimization. Self-organizing subnetwork formation.
+
+  What you'll learn: How to combine DRL with classical optimization in a
+  hierarchical architecture. The most comprehensive DRL paper for mmWave CF-MIMO
+   — builds directly on Paper 17's foundation.
+
+  ---
+  Paper 19 — Hybrid Knowledge-Data Driven (Deep Unfolding)
+
+  "Hybrid Knowledge-Data Driven Channel Semantic Acquisition and Beamforming for
+   Cell-Free Massive MIMO"
+
+  ┌────────────────┬────────────────────────────────────────────────────────┐
+  │                │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Authors        │ Z. Gao, S. Liu, Y. Su, Z. Li, D. Zheng                 │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Journal        │ IEEE J. Selected Topics in Signal Processing (Q1, TOP  │
+  │                │ journal)                                               │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ Year /         │ 2023 / ~25+                                            │
+  │ Citations      │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ In your        │ Yes                                                    │
+  │ folder?        │                                                        │
+  ├────────────────┼────────────────────────────────────────────────────────┤
+  │ arXiv          │ https://arxiv.org/abs/2307.03070                       │
+  └────────────────┴────────────────────────────────────────────────────────┘
+
+  What you'll reproduce: MLP-Mixer autoencoder for channel semantic acquisition
+  (joint pilot design + CSI quantization + reconstruction), knowledge-driven
+  deep-unfolding multi-user beamformer (unrolling WMMSE into NN layers).
+
+  What you'll learn: The cutting-edge "best of both worlds" — combining physical
+   domain knowledge with DL. Deep unfolding is arguably the most promising
+  direction for practical DL-based beamforming because it preserves
+  interpretability while gaining learning capability.
+
+  ---
+  Paper 20 — GNN for CF-MIMO Power Control (MISSING)
+
+  "Graph Neural Network Aided Power Control in Partially Connected Cell-Free 
+  Massive MIMO"
+
+  ┌─────────────────┬───────────────────────────────────────────────────────┐
+  │                 │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Authors         │ S. Mishra, L. Salaun, H. Yang, C. S. Chen (Nokia Bell │
+  │                 │  Labs)                                                │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Journal         │ IEEE Trans. Wireless Commun. (Q1)                     │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ Year /          │ 2024 / ~20+ (growing rapidly)                         │
+  │ Citations       │                                                       │
+  ├─────────────────┼───────────────────────────────────────────────────────┤
+  │ In your folder? │ NO — MISSING                                          │
+  └─────────────────┴───────────────────────────────────────────────────────┘
+
+  What you'll reproduce: Bipartite GNN capturing AP-UE relationships,
+  permutation equivariant architecture for max-min SINR power control with MRT
+  beamforming.
+
+  What you'll learn: GNNs are the emerging dominant paradigm for DL-based
+  CF-MIMO (2024-2026). The natural graph structure of CF-MIMO (APs = nodes, UEs
+  = nodes, channels = edges) makes GNNs a perfect fit. Superior scalability and
+  generalizability across network sizes.
+
+  ---
+  Recommended Reproduction Order
+
+  PHASE 1: Theory Foundation (Papers 1 → 2 → 3 → 4)
+   ├─ Paper 1:  System model + CB baseline (the origin)
+   ├─ Paper 2:  THE textbook — complete mathematical toolkit
+   ├─ Paper 3:  MMSE processing + 4 cooperation levels
+   └─ Paper 4:  Scalability via DCC clustering
+
+  PHASE 2: Classical Beamforming (Papers 5 → 6 → 7 → 8 → 9 → 10)
+   ├─ Paper 5:  Energy efficiency + power optimization
+   ├─ Paper 6:  ZF precoding foundation (companion to Paper 1)
+   ├─ Paper 7:  Modified CB (low-complexity improvement)
+   ├─ Paper 8:  Enhanced normalized CB
+   ├─ Paper 9:  Local PZF (distributed precoding landmark)
+   └─ Paper 10: Optimal beamforming upper bound (SOCP)
+
+  PHASE 3: Advanced Beamforming (Papers 11 → 12 → 13)
+   ├─ Paper 11: mmWave hybrid BF + fronthaul constraints
+   ├─ Paper 12: User-centric resource allocation
+   └─ Paper 13: Uplink mmWave HBF with RF chain activation
+
+  PHASE 4: DL-Based Beamforming (Papers 14 → 15 → 16 → 17 → 18 → 19 → 20)
+   ├─ Paper 14: Pioneer DL for CF-MIMO (JSAC, Bashar)
+   ├─ Paper 15: DL power allocation (Bjornson group)
+   ├─ Paper 16: Unsupervised learning for BF (entry point)
+   ├─ Paper 17: DRL — DDPG/D4PG for BF
+   ├─ Paper 18: Hierarchical DRL for mmWave
+   ├─ Paper 19: Deep unfolding + hybrid approach
+   └─ Paper 20: GNN for power control (state-of-art)
+
+  ---
+  Summary Table
+
+  ┌─────┬────────────────┬───────┬─────┬─────────┬────────┬───────┬───────┐
+  │  #  │     Paper      │ Journ │ Yea │ Citatio │ Catego │ In Fo │ Code? │
+  │     │                │  al   │  r  │   ns    │   ry   │ lder? │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ CF-MIMO vs     │ IEEE  │ 201 │         │        │       │       │
+  │ 1   │ Small Cells    │ TWC   │ 7   │ ~1,500  │ Core   │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │ 2   │ Foundations    │ FnT   │ 202 │ ~600    │ Core   │ NO    │ MATLA │
+  │     │ (Monograph)    │ SP    │ 1   │         │        │       │ B     │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Competitive w/ │ IEEE  │ 202 │         │        │       │ MATLA │
+  │ 3   │  MMSE          │ TWC   │ 0   │ ~700    │ Core   │ Yes   │ B     │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Scalable       │ IEEE  │ 202 │         │        │       │ MATLA │
+  │ 4   │ CF-MIMO        │ TCOM  │ 0   │ ~500    │ Core   │ Yes   │ B     │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Total Energy   │ IEEE  │ 201 │         │        │       │ MATLA │
+  │ 5   │ Efficiency     │ TGCN  │ 8   │ ~500    │ Core   │ Yes   │ B     │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Precoding &    │ IEEE  │ 201 │         │        │       │       │
+  │ 6   │ Power Optim.   │ TWC   │ 7   │ ~550    │ Core   │ NO    │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │                │ IEEE  │ 201 │         │        │       │       │
+  │ 7   │ Modified CB    │ WCL   │ 9   │ ~130    │ BF     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Enhanced       │ IEEE  │ 202 │         │        │       │       │
+  │ 8   │ Normalized CB  │ TCOM  │ 1   │ ~70     │ BF     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Local Partial  │ IEEE  │ 202 │         │        │       │       │
+  │ 9   │ ZF             │ TWC   │ 0   │ ~200    │ BF     │ NO    │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Max-Min        │ IEEE  │ 202 │         │        │       │       │
+  │ 10  │ Optimal BF     │ CL    │ 0   │ ~100    │ BF     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │                │ IEEE  │     │         │        │       │       │
+  │ 11  │ CF-mmWave +    │ Acces │ 201 │ ~130    │ BF     │ Yes   │ --    │
+  │     │ Fronthaul      │ s     │ 9   │         │        │       │       │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ DL Resource    │ IEEE  │ 202 │         │        │       │       │
+  │ 12  │ Alloc. + UC    │ TWC   │ 2   │ ~80     │ BF     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ HBF + RF Chain │ IEEE  │ 202 │         │        │       │ GitHu │
+  │ 13  │  Activ.        │ TVT   │ 2   │ ~40     │ BF     │ Yes   │ b     │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ DL for Limited │ IEEE  │ 202 │         │        │       │       │
+  │ 14  │ -Fronthaul     │ JSAC  │ 0   │ ~130    │ DL     │ NO    │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Learning Power │ IEEE  │ 202 │         │        │       │ MATLA │
+  │ 15  │  Alloc.        │ TWC   │ 3   │ ~80     │ DL     │ NO    │ B     │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │ 16  │ Unsupervised   │ IEEE  │ 202 │ ~50     │ DL     │ Yes   │ Pytho │
+  │     │ BF             │ CL    │ 2   │         │        │       │ n     │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │                │ IEEE  │ 202 │         │        │       │       │
+  │ 17  │ DRL for BF     │ TCCN  │ 2   │ ~60     │ DL     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Hierarchical   │ IEEE  │ 202 │         │        │       │       │
+  │ 18  │ DRL mmWave     │ TCOM  │ 2   │ ~45     │ DL     │ Yes   │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ Hybrid         │ IEEE  │ 202 │         │        │       │       │
+  │ 19  │ Knowledge-Data │ JSTSP │ 3   │ ~25     │ DL     │ Yes   │ --    │
+  │     │                │  (Q1) │     │         │        │       │       │
+  ├─────┼────────────────┼───────┼─────┼─────────┼────────┼───────┼───────┤
+  │     │ GNN Power      │ IEEE  │ 202 │         │        │       │       │
+  │ 20  │ Control        │ TWC   │ 4   │ ~20     │ DL     │ NO    │ --    │
+  │     │                │ (Q1)  │     │         │        │       │       │
+  └─────┴────────────────┴───────┴─────┴─────────┴────────┴───────┴───────┘
+
+  ---
+  6 Papers You Need to Download
+
+  ┌─────┬────────────────┬───────────────────────────────────────────────────┐
+  │  #  │     Paper      │                  Where to Get It                  │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │     │ Foundations of │ https://arxiv.org/abs/2108.02541 (free, 311       │
+  │ 2   │  User-Centric  │ pages)                                            │
+  │     │ CF-MIMO        │                                                   │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │     │ Precoding &    │                                                   │
+  │ 6   │ Power          │ IEEE Xplore (Nayebi et al., TWC 2017)             │
+  │     │ Optimization   │                                                   │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │ 9   │ Local Partial  │ https://arxiv.org/abs/1909.01034                  │
+  │     │ Zero-Forcing   │                                                   │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │ 14  │ DL for Limited │ IEEE Xplore (Bashar et al., JSAC 2020)            │
+  │     │ -Fronthaul     │                                                   │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │ 15  │ Learning Power │ https://arxiv.org/abs/2109.03128 + https://github │
+  │     │  Allocation    │ .com/emilbjornson/power-allocation-cell-free      │
+  ├─────┼────────────────┼───────────────────────────────────────────────────┤
+  │ 20  │ GNN Power      │ IEEE Xplore (Mishra et al., TWC 2024)             │
+  │     │ Control        │                                                   │
+  └─────┴────────────────┴───────────────────────────────────────────────────┘
+
+  ---
+  What You'll Master After All 20 Papers
+
+  After completing this progression, you will have:
+
+  - Theory: Complete mathematical foundation (channel estimation, SE derivation,
+   power control, pilot assignment, 4 cooperation levels, DCC clustering)
+  - Beamforming: The full precoding ladder — CB → Modified CB → ECB → PZF → ZF →
+   MMSE → Optimal (SOCP), plus hybrid beamforming for mmWave
+  - DL paradigms: All 4 major approaches — supervised DNNs, unsupervised
+  learning, deep reinforcement learning (DDPG/D4PG), deep unfolding (WMMSE
+  unrolling), and GNNs
+  - Practical aspects: Energy efficiency, fronthaul constraints, user-centric
+  clustering, scalability, RF chain management
+
+  This positions you to identify open research gaps — particularly in deep
+  unfolding for distributed CF-MIMO, multi-objective GNN optimization,
+  transformer-based architectures, and DL under hardware impairments — and
+  pursue novel contributions.
+
+✻ Cogitated for 22m 33s
