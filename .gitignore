@@ -7,3 +7,4 @@ papers/*.pdf
 papers/**/*.pdf
 
 *.asv
+settings.local.json
