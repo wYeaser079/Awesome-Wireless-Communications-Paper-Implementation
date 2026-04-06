@@ -1,0 +1,2149 @@
+================================================================================
+FULL TEXT EXTRACTION
+Paper: Scalable Cell-Free Massive MIMO Systems
+Authors: Emil Bjornson, Luca Sanguinetti
+Journal: IEEE Transactions on Communications, 2020
+Total Pages: 14
+================================================================================
+
+
+================================================================================
+PAGE 1 OF 14
+================================================================================
+
+1
+Scalable Cell-Free Massive MIMO Systems
+Emil Björnson, Senior Member, IEEE, Luca Sanguinetti, Senior Member, IEEE
+Abstract—Imagine a coverage area with many wireless access
+points that cooperate to jointly serve the users, instead of
+creating autonomous cells. Such a cell-free network operation can
+potentially resolve many of the interference issues that appear
+in current cellular networks. This ambition was previously
+called Network MIMO (multiple-input multiple-output) and has
+recently reappeared under the name Cell-Free Massive MIMO.
+The main challenge is to achieve the beneﬁts of cell-free operation
+in a practically feasible way, with computational complexity
+and fronthaul requirements that are scalable to large networks
+with many users. We propose a new framework for scalable
+Cell-Free Massive MIMO systems by exploiting the dynamic
+cooperation cluster concept from the Network MIMO literature.
+We provide a novel algorithm for joint initial access, pilot
+assignment, and cluster formation that is proved to be scalable.
+Moreover, we adapt the standard channel estimation, precoding,
+and combining methods to become scalable. A new uplink and
+downlink duality is proved and used to heuristically design
+the precoding vectors on the basis of the combining vectors.
+Interestingly, the proposed scalable precoding and combining
+outperform conventional maximum ratio processing and also
+performs closely to the best unscalable alternatives.
+Index Terms—Cell-Free Massive MIMO, scalable implementa-
+tion, centralized and distributed algorithms, dynamic cooperation
+clustering, user-centric networking, uplink-downlink duality.
+I. INTRODUCTION
+By transmitting a signal coherently from multiple antennas,
+the received power can be increased without increasing the
+total transmit power [2]. This is the phenomenon utilized by
+classic beamforming from co-located antenna arrays, but can
+be also utilized when transmitting coherently from multiple
+access points (APs) [3]. Even if the APs have different channel
+gains to the user equipment (UE), the beneﬁt of coherent
+transmission makes it better to divide the transmit power
+over multiple APs than transmitting only from the AP with
+the best channel. Such coherent transmission has been given
+many names, including Network MIMO [4], and provides
+substantially higher performance than when each UE is only
+served by one AP [5]–[7].
+The early Network MIMO papers assumed all APs have
+network-wide channel state information (CSI) and transmit
+to all UEs [4], [8]. These are two theoretically preferable,
+c⃝2020 IEEE. Personal use of this material is permitted. Permission from
+IEEE must be obtained for all other uses, in any current or future media,
+including reprinting/republishing this material for advertising or promotional
+purposes, creating new collective works, for resale or redistribution to servers
+or lists, or reuse of any copyrighted component of this work in other works.
+This article was presented in part at IEEE PIMRC 2019 [1].
+E. Björnson was supported by ELLIIT and the Wallenberg AI, Autonomous
+Systems and Software Program (WASP). L. Sanguinetti was supported by the
+University of Pisa under the PRA 2018-2019 Research Project CONCEPT.
+E. Björnson is with the Department of Electrical Engineering (ISY),
+Linköping University, 58183 Linköping, Sweden (emil.bjornson@liu.se).
+L. Sanguinetti is with the University of Pisa, Dipartimento di Ingegneria
+dell’Informazione, 56122 Pisa, Italy (luca.sanguinetti@unipi.it).
+but impractical, assumptions that lead to immense fronthaul
+signaling for CSI and data sharing, respectively, as well
+as huge computational complexity. Fortunately, [9] proved
+that Network MIMO can operate without CSI sharing, by
+sacriﬁcing the ability for the APs to jointly cancel interference.
+Moreover, to limit data sharing and computational complexity,
+each UE can be served only by an AP subset [10]. Initially,
+a network-centric approach was taken by dividing the APs
+into non-overlapping (disjoint) cooperation clusters in which
+the APs are sharing data (and potentially CSI) to serve only
+the UEs residing in the joint coverage area [11]–[13]. This
+approach was considered in 4G but provides small practical
+gains [14]. One key reason is that many UEs will be located
+at the edges of the clusters and, thus, will observe substantial
+inter-cluster interference from the neighboring clusters [15].
+The alternative is to take a user-centric approach where each
+UE is served by the AP subset providing the best channel
+conditions. Since these subsets are generally different for
+every UE, it is not possible to divide the network into non-
+overlapping cooperation clusters. Instead, each AP needs to
+cooperate with different APs when serving different UEs, over
+the same time and frequency resource [16]–[18].1 A general
+user-centric cooperation framework was proposed in [17] un-
+der the name dynamic cooperation clustering (DCC) and was
+further described and analyzed in the textbook [10]. The word
+dynamic refers to the adaptation to time-variant characteristics
+such as channel properties and UE locations (to name a few).
+The practical feasibility of DCC was experimentally veriﬁed
+by the pCell technology [21], but the combination of Network
+MIMO and DCC didn’t gain much interest at the time it was
+proposed since Massive MIMO was simultaneously conceived
+[22] and rightfully gained the spotlight.
+A. Cell-Free Massive MIMO and Scalability Issues
+Now that Massive MIMO is a rather mature technology
+[2], [23], [24] that has made its way into the 5G standard
+[25], the research focus is shifting back to Network MIMO,
+but under the new name Cell-Free Massive MIMO coined
+in [5], [6]. The key novelty is the spectral efﬁciency (SE)
+analysis that features imperfect CSI, but conceptually, it is
+a special case of Network MIMO operating in time-division
+duplex (TDD) mode. In fact, it has been a step backwards
+in terms of implementation feasibility. Although most papers
+embraced the approach from [9] of not sharing CSI between
+the cooperating APs, all APs were assumed to be connected to
+1It has also been proposed to have non-overlapping cooperation clusters that
+change over time or frequency [19], [20]. One can then mitigate inter-cluster
+interference by scheduling each UE on its preferred cluster conﬁguration.
+However, this is an inefﬁcient solution since each UE can only be assigned
+to a fraction of the time-frequency resources, while MIMO systems should
+preferably assign all such resources to all UEs and separate UEs spatially.
+arXiv:1908.03119v2  [cs.IT]  8 May 2020
+
+
+================================================================================
+PAGE 2 OF 14
+================================================================================
+
+2
+a single central processing unit (CPU), which is responsible to
+coordinate and process the signals of all UEs in [5]–[7], [26]
+(and references therein). That implies that the computational
+complexity and fronthaul capacity, required for each AP to
+process and share the data signals related to all UEs, grow
+linearly (or faster) with the number of UEs. Hence, the original
+form of Cell-Free Massive MIMO was unscalable. The user-
+centric approach was reintroduced in [27]–[29], but without
+making the connection to DCC, without analyzing how to
+utilize it to achieve a provably scalable network operation, and
+without discussing how it can beneﬁt from the implementation
+aspects previously addressed in the Network MIMO literature
+[10]. This is all done in this paper.
+The scalability of the power control algorithms have been
+considered in a series of previous papers. Particularly, [5], [6],
+[26], [30], [31] developed network-wide optimization algo-
+rithms for Cell-Free Massive MIMO with a complexity that
+grows polynomially with the number of APs and UEs. Hence,
+these algorithms are not feasible for practical implementation;
+only suboptimal algorithms combined with DCC can be used
+for power control to achieve a scalable implementation. One
+scalable power control algorithm is “equal power allocation”,
+but there are plenty of other/better heuristic algorithms in
+the literature on both Network MIMO [9], [17], [32], [10,
+Sec. 3.4.4] and Cell-Free Massive MIMO [6], [27], [33], [34].
+For a given simulation setup and network utility function, some
+algorithms will perform better than others, but a numerical
+evaluation of power control schemes is not the focus of
+this paper. However, the framework described in this paper,
+combined with any of the known heuristic power control
+algorithms, leads to what we call a Scalable Cell-Free Massive
+MIMO system.
+B. Motivation and Contributions
+The main motivation of this paper is to deﬁne and design
+scalable Cell-Free Massive MIMO systems. The ﬁrst step
+in this direction is taken by proving that Cell-Free Massive
+MIMO is a special case of the DCC framework from the
+Network MIMO literature [10], [17]. This result is instru-
+mental to develop a new scalable algorithm for joint initial
+access, pilot assignment, and cooperation cluster formation.
+We are then deriving novel general SE expressions for up-
+link (UL) and downlink (DL) transmissions of two different
+cell-free implementations, characterized by different degrees
+of cooperation among the APs. Inspired by [7], the ﬁrst
+implementation is a centralized network in which the pilot
+signals received at all APs are gathered at CPUs, which
+perform channel estimation, and jointly process the UL and
+DL data signals. The second implementation is a decentralized
+network in which each AP locally estimates the channels of
+its associated UEs and uses this information to locally process
+data signals. Only the decoding and encoding of data signals
+is carried out at the CPUs [7]. For both implementations, the
+new SE expressions are valid for arbitrary clusters, spatially
+correlated Rayleigh fading channels, imperfect CSI, APs with
+any number N of antennas, and heuristic or optimized signal
+processing schemes. We discuss under which conditions these
+CPU
+AP l
+Fig. 1. Illustration of a Cell-Free Massive MIMO network
+with many distributed APs connected to CPUs. The APs may
+jointly serve the UEs in the coverage area.
+methods are scalable. A new UL and DL duality is proved
+and used to heuristically design the DL precoding vectors
+on the basis of the UL combining vectors. Numerical results
+are used to demonstrate that the proposed scalable framework
+achieves almost the same SE as the state-of-the-art unscalable
+solutions, and greatly outperforms the original maximum ratio
+(MR) based Cell-Free Massive MIMO algorithms.
+C. Paper Outline and Notation
+The rest of this paper is organized as follows. Section II
+introduces the network model for Cell-Free Massive MIMO
+and discusses the channel estimation process. Section III
+reviews the system model for the original form of Cell-Free
+Massive MIMO and then discusses its scalability issues when
+the number of UEs increases. The DCC framework is reviewed
+in Section IV. This section also shows that several cell-free
+network setups recently proposed can be described by the DCC
+framework. Section V proposes a scalable implementation of
+Cell-Free Massive MIMO for both UL and DL and with
+two different levels of cooperation among the APs. The
+performance of the proposed implementations is numerically
+evaluated and compared in Section VI. Finally, the main
+conclusions and implications are drawn in Section VII.
+Reproducible research: All the simulation results can be
+reproduced using the Matlab code and data ﬁles available at:
+https://github.com/emilbjornson/scalable-cell-free
+Notation: Boldface lowercase letters, x, denote column
+vectors and boldface uppercase letters, X, denote matrices.
+The superscripts
+T,
+∗,
+H, and
+† denote transpose, conju-
+gate, conjugate transpose and pseudo-inverse, respectively.
+The n × n identity matrix is In. We use ≜for deﬁnitions
+and diag(A1, . . . , An) for a block-diagonal matrix with the
+square matrices A1, . . . , An on the diagonal. The multi-
+variate circularly symmetric complex Gaussian distribution
+with correlation matrix R is denoted NC(0, R). The expected
+value of x is denoted as E{x}. We use |A| to denote the
+cardinality of the set A.
+II. NETWORK MODEL
+We consider a cell-free network consisting of K single-
+antenna UEs and L APs, each equipped with N antennas,
+
+
+================================================================================
+PAGE 3 OF 14
+================================================================================
+
+3
+that are arbitrarily distributed over the coverage area. The
+APs are connected to edge-cloud processors, called CPUs
+[21], [33], [35], in an arbitrary fashion. This is illustrated in
+Fig. 1 and further discussed in Section V-E. This setup enables
+coherent joint transmission and reception to the UEs in the
+entire coverage area, and is called Cell-Free Massive MIMO
+when L and K are large; it is often assumed that L ≫K
+[5], [6], but the methods developed in this paper hold for any
+values.
+We assume the APs and UEs operate according to a TDD
+protocol with a pilot phase for channel estimation and a data
+transmission phase. We consider the standard Massive MIMO
+TDD protocol from [2], where each coherence block is divided
+into τp channel uses for UL pilots, τu for UL data, and
+τd for DL data such that τc = τp + τu + τd. The channel
+between AP l and UE k is denoted by hkl ∈CN and the
+collective channel from all APs is hk = [hT
+k1 . . . hT
+kL]T ∈CM
+with M = NL being the total number of antennas in the
+coverage area. In each coherence block, an independent corre-
+lated Rayleigh fading realization is drawn hkl ∼NC(0, Rkl)
+where Rkl ∈CN×N is the spatial correlation matrix. The
+Gaussian distribution models the small-scale fading whereas
+the positive semi-deﬁnite correlation matrix Rkl describes the
+large-scale fading, including geometric pathloss, shadowing,
+antenna gains, and spatial channel correlation [2, Sec. 2.2]. We
+assume the channel vectors of different APs are independently
+distributed, thus E{hkn(hkl)
+H} = 0 for l ̸= n. This is a
+reasonable assumption since the APs are spatially distributed
+in the network. The collective channel is thus distributed as
+follows:
+hk ∼NC(0, Rk)
+(1)
+where Rk = diag(Rk1, . . . , RkL) ∈CM×M is the block-
+diagonal spatial correlation matrix. The UEs’ channels are
+independently distributed. We assume the spatial correlation
+matrices {Rkl} are available wherever needed; see [36]–[39]
+for practical correlation matrix estimation methods.
+A. Pilot Transmission and Channel Estimation
+We assume there are τp mutually orthogonal τp-length pilot
+signals, with τp being a constant independent of K.2 The
+pilots are assigned to the UEs when they gain access into
+the network; an algorithm for pilot assignment is proposed in
+Section V-A. For now, we let St ⊂{1, . . . , K} denote the
+subset of UEs assigned to pilot t. When these UEs transmit
+such a pilot, the received signal ypilot
+tl
+∈CN after despreading
+at AP l is [2, Sec. 3]
+ypilot
+tl
+=
+X
+i∈St
+√τppihil + ntl
+(2)
+where pi is the transmit power of UE i, τp is the processing
+gain, and ntl ∼NC(0, σ2IN) is the thermal noise. Using
+standard results [2, Sec. 3], the minimum mean-squared-error
+(MMSE) estimate of hkl for k ∈St is
+bhkl = √pkτpRklΨ−1
+tl ypilot
+tl
+(3)
+2The value can change over the day, depending on the trafﬁc load, but there
+will be a maximum value that is supported.
+where
+Ψtl = E{ypilot
+tl
+(ypilot
+tl
+)
+H} =
+X
+i∈St
+τppiRil + σ2IN
+(4)
+is the correlation matrix of (2). The mutual interference
+generated in (2) by the pilot-sharing UEs in St causes the
+so-called pilot contamination that degrades the system perfor-
+mance, similar to the case in standard Massive MIMO. Pilot
+contamination has two main consequences [2, Sec. 3.3.2]:
+ﬁrstly, it reduces the estimation quality that makes coherent
+transmission less effective; secondly, the estimates bhkl for
+k ∈St become correlated, which leads to additional interfer-
+ence. Both effects have an impact on the UEs’ performance
+but it is only the second one that is responsible of the so-
+called coherent interference [2, Sec. 4.2], which has received
+particular attention in the literature since it might increase
+linearly with N, just as the signal term [22], [40], [41].
+Notice that the N × N matrix √pkτpRklΨ−1
+tl
+in (3) only
+depends on the channel statistics, which by deﬁnition are
+ﬁxed throughout the communication. The matrix can thus be
+precomputed at AP l with negligible complexity.3 The MMSE
+estimation requires to ﬁrst compute ypilot
+tl
+and then multiply
+it with the precomputed statistical matrix √pkτpRklΨ−1
+tl
+of
+each UE served by AP l. The ﬁrst operation requires Nτp
+complex multiplications per pilot sequence while the second
+needs N 2 complex multiplications per UE [2, Sec. 3.4].
+III. DEFINITION OF SCALABILITY AND REVIEW OF THE
+ORIGINAL FORM OF CELL-FREE MASSIVE MIMO
+To motivate and better understand the scalable framework
+proposed in this paper, we ﬁrst review the system model of the
+original Cell-Free Massive MIMO [5], [6], [30], where there
+are many APs that all of them simultaneously serve all the
+UEs in the system in both UL and DL.
+A. Uplink and Downlink Data Transmissions
+During UL data transmission, the received signal yul
+l ∈CN
+at AP l is
+yul
+l =
+K
+X
+i=1
+hilsi + nl
+(5)
+where si ∈C is the signal transmitted from UE i with power
+pi and nl ∼CN(0, σ2IN). Network-wide UL decoding was
+considered in the original papers on Cell-Free Massive MIMO
+[5], [30]. In that case, AP l selects a receive combining vector
+vkl ∈CN for UE k and computes vH
+klyul
+l locally. The network
+then estimates sk by computing the summation
+bsk =
+L
+X
+l=1
+v
+H
+klyul
+l
+=
+ L
+X
+l=1
+v
+H
+klhkl
+!
+sk +
+K
+X
+i=1,i̸=k
+ L
+X
+l=1
+v
+H
+klhil
+!
+si +
+L
+X
+l=1
+v
+H
+klnl
+= v
+H
+khksk +
+K
+X
+i=1,i̸=k
+v
+H
+khisi + v
+H
+kn
+(6)
+3In practice, the statistics change due to UE mobility or new scheduling
+decisions, but this is outside the scope of this paper.
+
+
+================================================================================
+PAGE 4 OF 14
+================================================================================
+
+4
+where vk = [vT
+k1 . . . vT
+kL]T ∈CM denotes the collective
+combining vector and n = [nT
+1 . . . nT
+L]T ∈CM collects all
+the noise vectors. Notice that (6) is equivalent to a UL single-
+cell Massive MIMO system model with combined channels
+{vH
+khi = PL
+l=1 vH
+klhil : i = 1, . . . , K}. Therefore, the
+achievable UL SEs easily follow from that literature [2,
+Sec. 4.1]. The key difference between cell-free and cellular
+networks lies in the design of combining vectors {vkl} since
+each AP should preferably only use CSI that it can acquire
+locally in the pilot transmission phase, which is referred to as
+local CSI. The most popular choice in the Cell-Free Massive
+MIMO literature is MR combining with vkl = bhkl [5], [26],
+[27]. Other heuristic combining schemes such as local MMSE
+(L-MMSE) have also been considered [7]. Network-wide UL
+power optimization methods can be found in [5], [30], [31],
+among others.
+Let wil ∈CN denote the precoder that AP l assigns to UE
+i. During DL transmission, the received signal at UE k is
+ydl
+k =
+L
+X
+l=1
+h
+H
+kl
+K
+X
+i=1
+wilςi + nk = h
+H
+k
+K
+X
+i=1
+wiςi + nk
+(7)
+where ςi ∈C is the independent unit-power data signal in-
+tended for UE i (i.e., E{∥ςi∥2} = 1), wk = [wT
+k1 . . . wT
+kL]T ∈
+CM is the collective precoding vector, and nk ∼NC(0, σ2)
+is the receiver noise. Since hk is distributed as in (1), the
+system model (7) is mathematically equivalent to a DL single-
+cell Massive MIMO system with correlated fading [2, Sec.
+2.3.1]. Therefore, the achievable DL SE in Cell-Free Massive
+MIMO follows easily from the literature on Massive MIMO
+with correlated fading [2, Sec. 4.3]. As in the UL, the main
+difference between cell-free and cellular networks is in the
+selection of the precoding vectors, which should use only
+local CSI and also satisfy per-AP power constraints. The most
+popular choice is MR precoding with
+wil = √ρi
+bhil
+q
+E{∥bhil∥2}
+(8)
+where ρi ≥0 is the transmit power allocated to UE i.
+It can also be adapted using the network-wide DL power
+optimization methods developed (among others) in [5], [6],
+[26].
+B. The Scalability Issue
+Although the network-wide processing in the original Cell-
+Free Massive MIMO is appealing, it is not practical for large-
+scale network deployments with many UEs. To determine if a
+network technology is scalable or not, it is helpful to let K →
+∞and see which of the following tasks remain practically
+implementable:
+1) Signal processing for channel estimation;
+2) Signal processing for data reception and transmission;
+3) Fronthaul signaling for data and CSI sharing;
+4) Power control optimization.
+Based on this list, we make the following deﬁnition.
+Deﬁnition 1 (Scalability). A Cell-Free Massive MIMO net-
+work is scalable if all the four above-listed tasks have ﬁnite
+complexity and resource requirements for each AP as K →∞.
+The original form of Cell-Free Massive MIMO fails to be
+scalable with respect to all of the four above-listed tasks:
+1) AP l must compute channel estimates {bhkl : k =
+1, . . . , K} for all K UEs, which has an inﬁnite com-
+plexity as K →∞.
+2) AP l needs to create the transmitted signal PK
+k=1 wklςi
+where the summation implies inﬁnite complexity as
+K →∞. The complexity of computing the K pre-
+coding vectors {wkl : k = 1, . . . , K} depends on the
+precoding scheme, but even the low-complexity MR
+precoding scheme requires that the AP takes the K
+channel estimates and normalizes each one as in (8) to
+satisfy the power constraint. The same scalability issue
+appears in the UL, where the AP needs to compute
+{vH
+klhkl : k = 1, . . . , K} using K different combining
+vectors {vkl : k = 1, . . . , K}.
+3) AP l needs to receive the K DL data signals {ςk :
+k = 1, . . . , K} from a CPU and must forward its K
+processed received signals {vH
+klyul
+l
+: k = 1, . . . , K}
+over the fronthaul links. The number of scalars to be
+sent over the fronthaul grows unboundedly as K →∞.
+4) Any non-trivial network-wide power optimization has
+a complexity that goes to inﬁnity as K →∞. For
+example, the complexity of solving linear or convex op-
+timization problems grows polynomially in the number
+of optimization variables.
+In the remainder of this paper, we develop a novel imple-
+mentation framework that is scalable according to Deﬁnition 1.
+Although we start from the DCC framework for Network
+MIMO that was proposed in [17] and claimed to be scalable
+by the authors, we need to ﬁll in many missing details to
+make it truly scalable (e.g., dealing with initial access, pilot
+assignment, and channel estimation).
+Remark 1. The considered scalability deﬁnition keeps the
+computational complexity and fronthaul resources per AP
+ﬁnite as K →∞. The total computational complexity and
+fronthaul requirements will then be independent of K but
+proportional to L. Since LN ≫K for the network to be
+practically useful, K →∞requires also L →∞. This means
+the total complexity/requirements will diverge but, as long as
+each AP is equipped with a local processor and a fronthaul
+connection of sufﬁcient, but ﬁnite, capacity, each AP can carry
+out its necessary tasks irrespective of how large the network
+is. Hence, the scalability deﬁnition is practically sound.
+IV. DYNAMIC COOPERATION CLUSTERING
+The DCC framework was proposed in [10], [17] to enable
+“uniﬁed analysis of anything from interference channels to
+Network MIMO”. This is achieved by deﬁning a set of diagonal
+matrices Dil ∈CN×N, for i = 1, . . . , K and l = 1, . . . , L,
+determining which AP antennas may transmit to which UEs.
+More precisely, the jth diagonal element of Dil is 1 if the jth
+antenna of AP l is allowed to transmit to and decode signals
+
+
+================================================================================
+PAGE 5 OF 14
+================================================================================
+
+5
+UE 1
+AP cluster
+for UE 1
+UE 2
+AP cluster
+for UE 2
+UE 3
+AP cluster
+for UE 3
+Fig. 2. Example of dynamic cooperation clusters for three UEs
+in a cell-free network with a large number of APs.
+from UE i and 0 otherwise. In this section, we will show that
+the original Cell-Free Massive MIMO in (6) and (7) is one of
+the many setups that can be described by the DCC framework.
+Fig. 2 illustrates a network with three UEs that are served
+by a large number of APs. The colored regions illustrate
+which clusters of APs are serving which UEs and (implicitly)
+determine the matrices Dil. The fact that the clusters are
+partially overlapping is the core feature of DCC and also
+demonstrates that it is a cell-free network.
+A. Uplink and Downlink Data Transmissions
+The DCC framework does not change the received UL
+signal yul
+l in (5) since all APs will physically receive the signal
+from all UEs. However, only a subset of the APs are taking
+part in the signal detection, thus (6) changes to
+bsk =
+L
+X
+l=1
+v
+H
+klDklyul
+l
+= v
+H
+kDkhksk +
+K
+X
+i=1,i̸=k
+v
+H
+kDkhisi + v
+H
+kDkn
+(9)
+where Dk = diag(Dk1, . . . , DkL) ∈CM×M is a block-
+diagonal matrix.
+The received DL signal at UE k in (7) becomes
+ydl
+k =
+L
+X
+l=1
+h
+H
+kl
+K
+X
+i=1
+Dilwilςi + nk = h
+H
+k
+K
+X
+i=1
+Diwiςi + nk.
+(10)
+Note that Dil = 0N implies Dilwil = 0N and vH
+ilDil =
+0N, thus only APs with Dil ̸= 0N will transmit to UE k in
+the DL and apply receive combining in the UL. By selecting
+{D1, . . . , DK} in different ways, (9) and (10) can be used to
+model many different types of networks with multiple APs; see
+[10, Sec. 1] for examples that go beyond Cell-Free Massive
+MIMO.
+The original Cell-Free Massive MIMO in (6) and (7) is
+obtained from (9) and (10), respectively, in the special case
+of Di = IM ∀i, where all AP antennas serve all UEs. The
+user-centric approach to Cell-Free Massive MIMO described
+in [27] is also an instance of the DCC framework. In [27],
+Mi ⊂{1, . . . , L} denotes the subset of APs that serve UE i
+and we adopt the same notation in this paper. This corresponds
+to setting
+Dil =
+(
+IN
+if l ∈Mi
+0N
+if l ̸∈Mi
+(11)
+which is exactly the setup previously considered in [17].
+The Fog Massive MIMO architecture, described for DL-only
+data transmission in [29], is also an instance of the DCC
+framework; the only difference is that Ai, instead of Mi, is
+used to denote the subset of APs that serve UE i.
+B. A Partial Solution to the Scalability Issue
+The DCC framework was proposed in [17] to achieve
+scalability in Network MIMO, but without proving this claim
+mathematically or taking imperfect CSI into account. In this
+paper, we provide these important missing details with partic-
+ular focus on Cell-Free Massive MIMO. To this end, we ﬁrst
+deﬁne the set of UEs served by at least one of the antennas
+at AP l:
+Dl =
+
+i : tr(Dil) ≥1, i ∈{1, . . . , K}
+
+.
+(12)
+According to Deﬁnition 1, a sufﬁcient condition for scalability
+is as follows.
+Lemma 1. If the cardinality |Dl| is constant as K →∞for
+l = 1, . . . , L, then the Cell-Free Massive MIMO network with
+DCC satisﬁes the ﬁrst three conditions in Deﬁnition 1.
+Proof: AP l only needs to compute the channel estimates
+and precoding/combining vectors for |Dl| UEs. This has a
+constant complexity as K →∞if |Dl| is constant. Moreover,
+AP l only needs to send/receive data related to these |Dl| UEs
+over the fronthaul network, which is a constant number as
+K →∞.
+The only part of Deﬁnition 1 that is not captured by
+Lemma 1 is the complexity of the power optimization, but this
+fourth condition is relatively easy to satisfy; for example, by
+using full power in UL and equal power allocation between the
+served UEs in DL. With these results in mind, the practically
+important question is how to select the sets Dl for l = 1, . . . , L
+in a scalable way, while guaranteeing service to all UEs. This
+challenge is tackled in the next section, along with the design
+of combining and precoding schemes for a scalable Cell-Free
+Massive MIMO system.
+V. SCALABLE CELL-FREE MASSIVE MIMO FRAMEWORK
+We will now propose the ﬁrst scalable implementation of
+Cell-Free Massive MIMO. It is inspired by the guidelines
+for distributed Network MIMO in [10, Sec. 4.3, 4.7], but is
+substantially more detailed and also focused on channel es-
+timation and resource allocation, particularly pilot allocation.
+We ﬁrst note that the algorithms for user-centric clustering
+in previous works have two deﬁciencies: [28], [33] do not
+limit how many UEs that an AP can serve, making them
+unscalable as K →∞, and [27], [29] do not guarantee that all
+UEs are served. We will develop an algorithm for joint initial
+
+
+================================================================================
+PAGE 6 OF 14
+================================================================================
+
+6
+access, pilot assignment, and cluster formation that resolves
+both issues. We ﬁrst make the following key assumption.
+Assumption 1. Each AP serves at most one UE per pilot
+sequence and uses all its N antennas to serve these UEs.
+The above assumption implies that |Dl| ≤τp and
+Dil =
+(
+IN
+i ∈Dl
+0N
+i ̸∈Dl
+(13)
+for l = 1, . . . , L. Since τp was assumed to be independent of
+K, the scalability requirement in Lemma 1 is satisﬁed. The
+rationale behind Assumption 1 is as follows:
+1) Pilot contamination degrades the channel estimation
+quality and causes coherent interference [2]. If an AP
+serves more than one UE per pilot sequence, the signals
+from and to these pilot-sharing UEs will be strongly
+interfering, which is undesired.
+2) The channel estimation and signal processing (i.e., pre-
+coding and combining) complexity become ﬁxed and
+scalable, even if all N antennas are used.
+3) The fronthaul links need to support τp parallel UL and
+DL data signals per AP.
+A. Algorithm for Joint Initial Access, Pilot Assignment, and
+Cluster Formation
+When a new UE wants to access the network, it needs to
+be assigned a pilot and make it into the set Dl of at least one
+AP. This must be done in a distributed fashion, which has the
+risk that the UE is inadvertently dropped from service since
+no AP decides to transmit to it [27], [29]. To avoid that, we
+propose the three-step access procedure illustrated in Fig. 3.
+In particular, each UE appoints a Master AP that is required
+to transmit to it in the DL and coordinate the decoding of the
+UL data. If K +1 is the index of the connecting UE, then the
+proposed algorithm is:
+Step 1: The accessing UE measures βl = tr(R(K+1)l)/N for
+all nearby APs by using the periodically broadcasted
+synchronization signals.4 Then, the UE appoints AP ℓ
+with
+ℓ= arg maxl βl
+(14)
+as its Master AP. The UE also uses the broadcasted
+signal to synchronize to the AP. The UE contacts its
+Master AP via a standard random access procedure [42]–
+[44].
+Step 2: The appointed Master AP responds by assigning pilot τ
+to the UE, where
+τ = arg mint tr(Ψtl)
+(15)
+with Ψtl given in (4). The computation only involves
+the existing K UEs and τ is the pilot where the Master
+AP observes the least pilot contamination. The Master
+AP informs a limited set of neighboring APs that it is
+going to serve UE K + 1 on pilot τ.
+4Such signals exist in standards for cellular networks. Examples are the
+primary and secondary synchronization signals in 5G.
+Step 3: Each of the neighboring AP decides if it will serve UE
+K +1. The decision rule is to serve the UE if either the
+AP does not serve any UE on pilot τ or the new UE
+has a better channel than the UE it currently serves, in
+which case it switches serving to the new UE.
+In summary, the UE appoints the AP with the strongest
+large-scale fading channel coefﬁcient as its Master AP and it
+is assigned to the pilot that this AP observes the least pilot
+power on.5
+When a UE moves around or other UEs leave or connect
+to the network, the proposed access procedure can be redone.
+The UE can initiate such a procedure by appointing a new
+Master AP, in which case the procedure proceeds as if the UE
+would be inactive and is now accessing the network. The new
+Master AP then informs the previous Master AP that it has
+taken over the service of the UE. Alternatively, the current
+Master AP can periodically update the pilot assignment by
+computing (15) and check if this pilot would lead to less pilot
+contamination than the pilot currently assigned to the UE. In
+that case, the pilot is changed.
+The AP uses the MMSE channel estimates for receiving the
+UL data and for precoding the DL data. AP l only needs to
+compute estimates bhkl for k ∈Dl, which under Assumption 1
+is at most one UE per pilot. Since the complexity per AP is
+independent of K, the initial access and pilot assignment are
+scalable when K →∞.
+Remark 2. A weakness of the system model in (10) is that all
+transmissions are perfectly synchronized, which is practically
+infeasible due to propagation delays. However, if every AP is
+synchronized with its neighbors and the UE synchronizes with
+its Master AP in the initial access, the dominant terms in (10)
+will be accurate, making the model reasonable for analysis.
+B. Uplink Data Transmission
+Next, we derive and analyze achievable UL SE expressions
+for the DCC signal model in (9). We assume the APs delegate
+the task of UL data decoding to a nearby CPU with high
+computational resources (see Section V-E for details). Two
+levels of cooperation among the APs are described below and
+compared in terms of achievable SE and fronthaul signaling
+load. In the ﬁrst level, the pilot and data signals received at
+the APs are gathered (through the fronthaul links) at the CPU,
+which performs channel estimation and data detection in a
+fully centralized fashion. In the second level, AP l uses the
+available estimates {bhil : i ∈Dl} and the UL signal yul
+l
+in
+(5) to compute soft estimates vH
+klyul
+l
+of data, which are sent
+to the CPU for ﬁnal decoding.
+1) Centralized combining: The most advanced level of
+cooperation among APs for decoding the signal from UE k
+is when AP l ∈Mk ⊂{1, . . . , L} sends its pilot signals
+{ypilot
+tl
+: t = 1, . . . , τp} and data signal yul
+l
+to the CPU,
+which takes care of channel estimation and data detection in
+5This should be a pilot on which the AP is not currently serving a UE as
+being its Master AP, since that role has higher priority. Each AP can only
+be the Master AP of up to τp UEs in the proposed framework, but in the
+unlikely event that this cannot be satisﬁed, multiple UEs can be assigned to
+the same pilot but multiplexed in time and/or frequency instead.
+
+
+================================================================================
+PAGE 7 OF 14
+================================================================================
+
+7
+Step 1: UE appoints Master AP
+Step 2: Pilot assignment
+invitation to other APs
+Step 3: Formation of UE cluster
+Fig. 3. The proposed procedure for joint initial access, pilot assignment, and cluster formation consists of three main steps.
+TABLE I. Number of complex scalars that a generic AP l
+needs to exchange with the CPU over the fronthaul in each
+coherence block in the centralized and distributed cases.
+Pilot signals
+Uplink signals
+Downlink signals
+Centralized
+τpN
+τuN
+τdN
+Distributed
+—
+τu|Dl|
+τd|Dl|
+a centralized fashion. In other words, the APs act as relays
+that forward all signals to the CPU [45]. In each coherence
+block, AP l needs to send τpN complex scalars for the pilot
+signals and τuN complex scalars for the received signals. This
+is summarized in Table I.
+In the above circumstances, the signal available at the
+CPU for decoding UE k is bsk given in (9). The CPU can
+select an arbitrary receive combining vector vk ∈CLN for
+UE k based on its CSI. The collective channel estimate
+bhi = [bhT
+i1 . . . bhT
+iL]T can be only partially computed since only
+some APs send their received pilot signals. More precisely, the
+CPU knows
+Dibhi =
+
+
+Di1bhi1
+...
+DiLbhiL
+
+∼NC
+0, piτpDiRiΨ−1
+ti RiDi
+
+(16)
+where Ψ−1
+ti
+= diag(Ψ−1
+ti1, . . . , Ψ−1
+tiL) and unknown estimates
+are represented by zeros. For later use, we deﬁne the col-
+lective estimation error ˜hi = hi −bhi ∼NC(0, Ci) with
+Ci = diag(Ci1, . . . , CiL).
+The ergodic capacity is unknown for this setup, but we can
+rigorously analyze the performance by using standard capacity
+lower bounds [2], [46], which we refer to as achievable SEs.
+Proposition 1. When the MMSE channel estimates are known,
+an achievable SE of UE k is
+SE(ul,1)
+k
+= τu
+τc
+E
+n
+log2
+
+1 + SINR(ul,1)
+k
+o
+(17)
+where the instantaneous effective signal-to-interference-and-
+noise ratio (SINR) is given by
+SINR(ul,1)
+k
+=
+pk|vH
+kDkbhk|2
+K
+P
+i=1,i̸=k
+pi|vH
+kDkbhi|2 + vH
+kZkvk
+(18)
+with Zk = Dk
+ K
+P
+i=1
+piCi + σ2
+ulILN
+
+Dk.
+Proof: It follows the proof of [2, Th. 4.1] for Massive
+MIMO and is therefore omitted.
+The SE expression in (17) holds for any receive combining
+vector vk, spatial correlation matrices, and selection of the
+DCC, and is thus a generalization of [7], [30], [47], [48]. The
+expression can be easily computed for any vk by using Monte
+Carlo methods, as done in Section VI. A possible choice is to
+use MR combining with
+vMR
+k
+= Dkbhk
+(19)
+which has low computational complexity and maximizes the
+power of the desired signal in the numerator of (18), but the
+downside is that it neglects the existence of interference in
+the denominator. MR was considered in the original Cell-
+Free Massive MIMO papers [5], [30]. Table II summarizes
+the computational complexity6 with MR combining in terms
+of number of complex multiplications per UE. In deriving
+those numbers, we have taken into account that Dk
+=
+diag(Dk1, . . . , DkL) in (19) and that Dkl = 0N implies
+Dklbhkl = 0N. Hence, only the MMSE channel estimates bhkl
+with l ∈Mk are needed to compute vMR
+k
+, while all other APs
+assign a zero-valued receive combining vector.
+Despite the low complexity, MR combining is known to be
+a vastly suboptimal scheme [7], [30]. To obtain a good and
+scalable solution, we ﬁrst notice that SINR(ul,1)
+k
+in (18) has the
+form of a generalized Rayleigh quotient. Hence, the optimal
+combining can be obtained as follows.
+Corollary 1. The instantaneous SINR in (18) for UE k is
+maximized by the MMSE combining vector
+vMMSE
+k
+= pk
+ K
+X
+i=1
+piDkbhibh
+H
+i Dk + Zk
+!†
+Dkbhk
+(20)
+6This is obtained from [2, Sec. 4.1.2] under the assumption that all the
+statistical matrices have already been precomputed and stored, since they are
+constant throughout the communication.
+
+
+================================================================================
+PAGE 8 OF 14
+================================================================================
+
+8
+which leads to the maximum value
+SINR(ul,1)
+k
+= pkbh
+H
+kDk
+
+
+K
+X
+i=1,i̸=k
+piDkbhibh
+H
+i Dk + Zk
+
+
+†
+Dkbhk.
+(21)
+Proof: It follows from [2, Lemma B.10] since (18) is a
+generalized Rayleigh quotient with respect to vk. To take into
+account that the matrix Zk may not be strictly positive deﬁnite,
+a general form of the solution is used with (·)† denoting the
+matrix pseudoinverse [49].
+The SINR-maximizing combiner in (20) minimizes the
+mean-squared error MSEk = E{|sk−bsk|2{bhi}}, which is the
+conditional MSE between the data signal sk and the received
+signal bsk in (9) given the channel estimates [2, Sec. 4.1].
+This is why (20) is called MMSE combining. Notice that
+Dklbhil = 0N in (20) when Dkl = 0N, which implies that
+we need to compute all the K MMSE channel estimates
+{bhil : i = 1, . . . , K} at any AP l that is serving UE k
+(i.e., APs with index l ∈Mk). The total number of complex
+multiplications required by MMSE combining is reported in
+Table II and unfortunately grows with K, thus making the
+complexity unscalable.
+To solve this issue, we recall from [30] that the interference
+that affects UE k is mainly generated by a small subset of the
+other UEs. Inspired by this, we propose that only the UEs
+that are served by partially the same APs as UE k should be
+included in the expression in (20). These UEs have indices in
+the set
+Pk = {i : DkDi ̸= 0LN}.
+(22)
+Additional UEs can be included in Pk to deal with strongly
+interfering UEs that are only served by other APs, but such
+ﬁne-tuning is outside the scope of this paper.
+By utilizing Pk, we propose an alternative partial MMSE
+(P-MMSE) combining scheme:7
+vP−MMSE
+k
+= pk
+ X
+i∈Pk
+piDkbhibh
+H
+i Dk + Z′
+k
+!†
+Dkbhk
+(23)
+with
+Z′
+k = Dk
+ X
+i∈Pk
+piCi + σ2
+ulILN
+!
+Dk.
+(24)
+P-MMSE coincides with MMSE when UE k is served by all
+APs, but is generally different. Note that |Pk| = τp if all the
+APs that serve UE k communicate with exactly the same set of
+UEs. Moreover, it holds that |Pk| ≤(τp −1)|Mk| + 1, where
+the upper bound is achieved in the unlikely case that all the
+APs in Mk serve UE k but otherwise serve entirely different
+sets of UEs. Importantly, the upper bound is independent of
+K. The total number of complex multiplications required by
+P-MMSE combining is reported in Table II and, as anticipated,
+this is a scalable scheme whose complexity does not grow with
+K.
+7Similar P-MMSE combining schemes have appeared in literature (e.g.,
+[30]), but have not been designed for scalability.
+2) Distributed combining: Instead of sending {ypilot
+tl
+: t =
+1, . . . , τp} and yul
+l
+to the CPU, AP l can locally select the
+combiner vkl on the basis of its local channel estimates {bhil :
+i ∈Dl}, which are not more than τp vectors. The AP then
+computes its local estimate of sk as
+bskl = v
+H
+klDklyul
+l .
+(25)
+The local estimates of all APs that serve UE k are then sent
+to a CPU where the ﬁnal estimate of sk is obtained by taking
+the sum of the local estimates:
+bsk =
+L
+X
+l=1
+bskl.
+(26)
+Since AP l only needs to compute the local estimates for |Dl|
+UEs, τu|Dl| complex scalars are sent to the CPU per coherence
+block. This number is upper bounded by τuτp, which does not
+grow with K and therefore is scalable. The fronthaul signaling
+is summarized in Table I.
+Since the CPU does not have knowledge of channel esti-
+mates in the distributed case, an achievable UL SE cannot be
+computed as in Proposition 1. Instead, we utilize the so-called
+use-and-then-forget bound that is widely used in Massive
+MIMO [2, Th. 4.4], and also in [7], [30], [31] for Cell-Free
+Massive MIMO with Di = IM ∀i and speciﬁc combining
+vectors.
+Proposition 2. An achievable UL SE for UE k is
+SE(ul,2)
+k
+= τu
+τc
+log2
+
+1 + SINR(ul,2)
+k
+
+(27)
+where
+SINR(ul,2)
+k
+=
+pk |E {vH
+kDkhk}|2
+K
+P
+i=1
+piE
+nvH
+kDkhi
+
+2o
+−pk
+E{vH
+kDkhk}
+
+2
++σ2
+ulE{∥Dkvk∥2}
+.
+(28)
+Proof: It follows the same approach as in [2, Th. 4.4],
+but for the received signal in (9).
+AP l needs to select its combining vectors vkl for k ∈Dl
+as a function of {bhil : i ∈Dl}, without knowing the channel
+estimates available at other APs. Any combining vector vkl
+that depends on the local channel estimates and statistics
+can thus be adopted in the above expression. The simplest
+solution is MR combining as in [5], [30], while it was shown
+in [7] that L-MMSE combining provides better performance.
+Unfortunately, L-MMSE is not a scalable scheme, but inspired
+by P-MMSE combining in (23), we propose the local P-
+MMSE (LP-MMSE) given by
+vLP−MMSE
+kl
+= pk
+ X
+i∈Dl
+pi
+
+bhilbh
+H
+il + Cil
+
++ σ2IN
+!−1
+bhkl.
+(29)
+The key difference from L-MMSE is that (29) only includes
+the channel estimates and statistics of the UEs that AP l is
+serving (i.e., those whose index i ∈Dl). The computational
+complexity of LP-MMSE is quantiﬁed in Table II. The fact that
+|Dl| ≤τp with τp being independent of K makes LP-MMSE
+
+
+================================================================================
+PAGE 9 OF 14
+================================================================================
+
+9
+TABLE II. Number of complex multiplications for a generic UE k of different combining schemes in each coherence block.
+Scheme
+Channel estimation
+Combining vector computation
+MMSE
+(Nτp + N2)K|Mk|
+(N|Mk|)2+N|Mk|
+2
+K + (N|Mk|)2 + (N|Mk|)3−N|Mk|
+3
+P-MMSE
+(Nτp + N2)|Pk||Mk|
+(N|Mk|)2+N|Mk|
+2
+|Pk| + (N|Mk|)2 + (N|Mk|)3−N|Mk|
+3
+LP-MMSE
+(Nτp + N2) P
+l∈Mk
+|Dl|
+N2+N
+2
+P
+l∈Mk
+|Dl| +
+ N3−N
+3
++ N2
+|Mk|
+MR
+(Nτp + N2)|Mk|
+−
+a scalable solution, as K →∞. Compared to centralized
+P-MMSE combining in (23), LP-MMSE has much lower
+complexity per UE since it requires to compute the inverse
+of an N × N, rather than N|Mk| × N|Mk|, matrix.
+The expectations in (28) cannot be computed in closed form
+when using LP-MMSE, but can be easily computed using
+Monte Carlo simulations. However, similar to [2, Cor. 4.5], we
+can obtain the following closed-form expression when using
+MR combining.
+Corollary 2. If MR combining with vkl = bhkl is used, then
+the expectations in (28) become
+E {v
+H
+kDkhk} = pkτp
+L
+X
+l=1
+tr(DklRklΨ−1
+tklRkl)
+(30)
+E
+n
+∥Dkvk∥2o
+= pkτp
+L
+X
+l=1
+tr(DklRklΨ−1
+tklRkl)
+(31)
+and
+E
+v
+H
+kDkhi
+2	
+= pkτp
+L
+X
+l=1
+tr
+DklRilRklΨ−1
+tklRkl
+
++
+
+
+
+
+
+pkpiτ 2
+p
+
+L
+P
+l=1
+tr
+DklRilΨ−1
+tklRkl
+
+2
+if ti = tk
+0
+otherwise
+(32)
+where ti is the index of the pilot assigned to UE i.
+C. Downlink Data Transmission
+Next, we derive achievable DL SE expressions for the DCC
+signal model in (10) and propose scalable precoding schemes.
+We use the hardening bound that is widely used in the Massive
+MIMO literature to compute SEs [2, Th. 4.6], and also used
+in [5]–[7] for Cell-Free Massive MIMO with Di = IM ∀i, for
+speciﬁc choices of precoding. Without loss of generality, we
+assume that
+wi = √ρi ¯wi
+(33)
+where ¯wi ∈CN determines the spatial directivity of the
+transmission and satisﬁes E{∥¯wi∥2} = 1 such that ρi ≥0
+is the total transmit power allocated to UE i.
+Proposition 3. An achievable DL SE for UE k is given by
+SE(dl)
+k
+= τd
+τc
+log2
+
+1 + SINR(dl)
+k
+
+(34)
+where
+SINR(dl)
+k
+=
+ρk
+E {hH
+kDk ¯wk}
+2
+K
+P
+i=1
+ρiE
+hH
+kDi ¯wi
+2	
+−ρk
+E {hH
+kDk ¯wk}
+2 + σ2
+dl
+(35)
+and the expectations are with respect to the channel realiza-
+tions.
+Proof: It follows the same approach as in [2, Th. 4.6],
+but for the signal model in (10).
+The DL SE of UE k depends on the normalized precoding
+vectors of all UEs (i.e., { ¯wi : i = 1, . . . , K}) in contrast to the
+UL SEs in Propositions 1 and 2 that only depend on the UE’s
+own combining vector vk. Hence, while receive combining
+can be optimized on a per-UE basis, the precoding vectors
+should ideally be optimized jointly for all UEs, which is not
+scalable. To obtain a good heuristic solution, we utilize the
+following UL-DL duality result.
+Proposition 4. Let {vi : i = 1, . . . , K} and {pi : i =
+1, . . . , K} denote the set of combining vectors and transmit
+powers used in the UL. If the normalized precoding vectors
+are selected as
+¯wi =
+vi
+p
+E{vH
+i Divi}
+(36)
+then there exists a DL power control policy {ρi : ∀i} with
+PK
+i=1 ρi/σ2
+dl = PK
+i=1 pi/σ2
+ul for which
+SINR(dl)
+k
+= SINR(ul,2)
+k
+∀k.
+(37)
+Proof: This is proved by following the same approach as
+in [2, Th. 4.8], but for the signal model in (10). Details are
+given in the Appendix for completeness. Notice that the total
+transmit power in DL is the same as in UL, but is allocated
+differently over the UEs. The exact expression for the power
+control coefﬁcients is given in the Appendix.
+This theorem shows that the SINRs that are achieved in
+the UL are also achievable in the DL, by selecting the power
+control coefﬁcients {ρi : ∀i} and normalized precoding vectors
+{ ¯wi : ∀i} properly. Consequently, we have that an achievable
+DL SE for UE k is SE(dl)
+k
+= τd
+τc log2(1 + SINR(ul,2)
+k
+). Despite
+the UL-DL duality, the SE usually differs in UL and DL since
+the required power control policy has unscalable complexity
+and the power constraints in UL and DL also prevent it
+from being fully used. However, Proposition 4 motivates to
+select the DL precoders in cell-free networks based on the
+UL combiners as in (36).8 This must be done on the basis
+of the available channel estimates and, importantly, if the UL
+selection is scalable this property carries over to the DL. As
+8This is consistent with cellular networks, where it is a common practice
+to let the DL precoders be equal to the UL combiners, except for a scaling
+factor [50]–[52].
+
+
+================================================================================
+PAGE 10 OF 14
+================================================================================
+
+10
+in the UL, we consider two levels of cooperation among APs
+for precoding design. We stress that since
+(
+Dilwil = wil
+i ∈Dl
+Dilwil = 0N
+i ̸∈Dl
+(38)
+only the precoding vectors wil for i ∈Dl need to be selected
+for AP l. At both levels, we assume that the APs delegate the
+task of DL data encoding to a nearby CPU.
+Remark 3. The hardening bound of Proposition 3 has been
+widely used since the early articles on Massive MIMO [22],
+[53], [54] and is a reasonable choice for channels that exhibit
+channel hardening [2, Sec. 2.5]. However, the bound can be
+rather loose in Cell-Free Massive MIMO when the number of
+antennas N at the APs is relatively small [47], but it depends
+on the choice of combining scheme. We will return to this
+potential issue in Section VI.
+1) Centralized precoding: At the ﬁrst level, the CPU uses
+the UL channel estimates to compute the normalized precoding
+vectors { ¯wil} by exploiting channel reciprocity. Motivated
+by the UL-DL duality, we select the DL precoding vectors
+according to (36). By choosing vi according to one of the
+UL combining schemes described earlier in Section V-B1,
+the corresponding precoding scheme is obtained; that is,
+vi = vP-MMSE
+i
+yields P-MMSE precoding, and so forth. Once
+the precoding vectors are computed, they are used by the CPU
+to form the DL signal of any given AP l
+xdl
+l =
+K
+X
+i=1
+√ρiDil ¯wilςi
+(39)
+which is sent to the AP via the fronthaul link for transmission.
+The signaling required can be quantiﬁed as follows. In each
+coherence block, AP l needs to send τpN complex scalars to
+the CPU representing the pilot signals and to receive τdN
+complex scalars from the CPU for the DL signals. These
+values are summarized in Table I.
+2) Distributed precoding: Instead of sending {ypilot
+tl
+: t =
+1, . . . , τp} to the CPU, AP l can locally select the precoding
+vector ¯wil on the basis of its local channel estimates {bhil :
+i ∈Dl} to achieve a scalable implementation [9]. In this case,
+only the DL data signals {ςi : i ∈Dl} are sent from the
+CPU to AP l in each coherence block. This means that a total
+of τd|Dl| complex scalars exchanged per coherence block, as
+summarized in Table I.
+Two possible precoding schemes that satisfy the scalability
+requirement are the classical MR and the new LP-MMSE
+given in (29). Note that MR is also known as conjugate
+beamforming and is the standard scheme in the Cell-Free
+Massive MIMO literature, while this is the ﬁrst time that LP-
+MMSE precoding is considered.9 The beneﬁt of this scheme
+over MR is two-fold: 1) it suppresses interference spatially if
+N > 1 since the vector maximizes the ratio between desired
+signal power and interference caused to the other UEs served
+9A variation on LP-MMSE precoding, known as signal-to-leakage-and-
+noise ratio (SLNR) precoding, was considered in the conference version [1].
+It is another heuristic way to select precoding vectors in the absence of a
+UL-DL duality result. We refer to [1] for details.
+Fig. 4. For N = L = K = ρ = σ2
+dl = 1 and perfect CSI, the
+channel gain is |h|2 with MR and
+|h|2
+|h|2+1/
+q
+E{
+|h|2
+(|h|2+1)2 } with
+LP-MMSE, where x ∼NC(0, 1). Their PDFs are widely dif-
+ferent, particularly since only LP-MMSE has bounded support
+while MR has not.
+by the same AP; and 2) it reduces the variations in the effective
+gain hH
+klDilwil of desired and interfering channels for any N.
+The latter is a non-trivial phenomenon that appears even
+with N = L = K = 1 and when perfect CSI is available.
+Fig. 4 shows the probability density function (PDF) of the
+channel gains hHw for h ∼NC(0, 1) and ρ = σ2
+dl = 1.
+We consider MR with w = h and LP-MMSE with w =
+h
+|h|2+1/
+q
+E{
+|h|2
+(|h|2+1)2 }. The channel gains have roughly the
+same mean values E{hHw}, but MR gives an exponential
+distribution with an inﬁnite tail while LP-MMSE has a small
+and compact support. This behavior will lead to higher SE
+when using LP-MMSE under inter-user interference; see Sec-
+tion VI-B for details.
+As in the UL, the SE can be computed in closed form with
+MR precoding, following the same approach as in [2, Cor. 4.7].
+Corollary 3. With MR precoding, the expectations in (35)
+become
+E{h
+H
+kDkwk} =
+L
+X
+l=1
+q
+ρilpkτptr(DklRklΨ−1
+tklRkl)
+(40)
+E{|h
+H
+kDiwi|2} =
+L
+X
+l=1
+ρil
+tr
+DilRilΨ−1
+til RilDilRkl
+
+tr(RilΨ−1
+til Ril)
++
+
+
+
+
+
+
+L
+P
+l=1
+√ρilpkτp
+tr
+
+DilRilΨ−1
+tilRkl
+
+q
+tr(RilΨ−1
+tilRil)
+
+2
+if ti = tk
+0
+otherwise
+(41)
+where ti is the index of the pilot assigned to UE i.
+D. Uplink and Downlink Power Allocation
+The UL transmit powers {pk : k = 1, . . . , K} in (17) and
+(27) need to be selected. The network-wide power optimiza-
+tion methods in [5], [30], [31] are not scalable, thus a heuristic
+solution is needed. We assume that each UE has a maximum
+UL power of P. Since heuristic solutions must be ﬁne-tuned
+based on extensive measurements, which is outside the scope
+
+
+================================================================================
+PAGE 11 OF 14
+================================================================================
+
+11
+of this paper, we consider a good baseline scheme. Each UE
+transmits at full power, which was shown in [7] to provide
+good SE for both strong and weak UEs:
+pi = P
+for
+i = 1, . . . , K.
+(42)
+Similarly, each AP has a maximum transmit power, denoted
+by ρ, and needs to select how to allocate it between the
+UEs it is serving. Network-wide optimization algorithms, as
+developed in [5], [6], [10], are not scalable as K →∞since
+the number of optimization variables grows with K.10 Since
+each AP is (at least partially) unaware of the power allocation
+decisions made at other APs, only heuristic solutions are scal-
+able. There are plenty of such schemes in the literature; some
+examples are found in [6], [9], [17], [33], [10, Sec. 3.4.4].
+Evaluation and comparison of the existing heuristic schemes
+require extensive simulations, which is outside the scope of
+this paper. Hence, we have selected schemes that are known
+to work fairly well.
+For the centralized precoding, we consider simple network-
+wide equal power allocation with ρi =
+ρ
+τp . The unit-norm
+precoding vector ¯wi determines how this power is distributed
+between the APs, and all APs are guaranteed to satisfy their
+power constraint since they serve at most τp UEs with a per-
+UE power that is at most
+ρ
+τp .
+For the distributed precoding, we adopt the power allocation
+algorithm from [33]:
+ρkl =
+(
+ρ
+√βkl
+P
+i∈Dl
+√βil
+if k ∈Dl
+0
+otherwise
+(43)
+where βkl = tr(Rkl)/N. Note that both schemes have the
+feature that each AP allocates more power to UEs with strong
+channels than to UEs with weak channels, while guaranteeing
+non-zero powers to all the served UEs. Since each UE is served
+by at least one AP (i.e., its Master AP), it will be assigned non-
+zero transmit power when using (43) and, thus, get a non-zero
+SE.
+E. Network Topology
+The proposed algorithms have been described as if the
+network has a star topology, where the APs are connected
+to a single CPU. However, they are mostly transparent to
+the actual network topology since only neighboring APs
+cooperate, which means that many other implementations are
+possible. Importantly, the CPU should not be viewed as a
+physical unit, but rather as a set of centralized processing tasks
+that must be carried out somewhere in the network.
+One option is to have local processors at each AP, as in
+classic cellular networks, and backhaul connections to the core
+network. There is no physical CPU in this case, but its tasks
+are divided between the APs [10]; for example, the Master AP
+of UE k can be the one taking care of the CPU tasks that are
+related to this UE (e.g., encoding of DL data and decoding
+10It is possible to implement network-wide optimization problems in an
+iterative semi-distributed way, for example, using dual decomposition theory
+[10, Sec. 4.3]. However, these approaches converge slowly, require even more
+optimization variables, and require a lot of backhaul signaling. Hence, this
+approach is neither practical nor scalable.
+of UL data). When information is sent to/from the CPU, it is
+actually sent to the AP that is responsible for carrying out the
+related CPU tasks, which might be a different AP over time.
+Another option is to divide the APs into disjunct sets and
+connect each one via fronthaul to an edge-cloud processor
+[21], [33], [35] for centralized processing, as illustrated in
+Fig. 1. The CPU tasks are distributed between different
+physical edge-cloud processors in this case.
+There are many other cloud-RAN solutions that can be used
+to distribute the computations over the network; see [55], [56]
+for some examples.
+VI. NUMERICAL ANALYSIS
+Numerical results are used in this section to demonstrate
+that the proposed way to make Cell-Free Massive MIMO
+scalable leads to a negligible loss in performance. We consider
+a simulation scenario where M APs and K = 100 UEs are
+independently and uniformly distributed in a 2 × 2 km square.
+Two different setups are considered: i) L = 400 APs with
+N = 1 antenna; ii) L = 100 APs with N = 4 antennas. By
+using the wrap-around technique, we approximate an inﬁnitely
+large network with 100 antennas/km2 and 25 UEs/km2.
+The UEs connect to the network as described in Sec-
+tion V-A, starting with τp UEs that have different pilots and
+then letting the UEs connect one after the other. We use the
+same propagation model as in [2, Sec. 4.1.3] with spatially
+correlated fading. The only difference is that the APs are de-
+ployed 10 m above the UEs, which creates a natural minimum
+distance. We assume τc = 200, τp = 10, pk = 100 mW,
+ρ = 1 W, and 20 MHz bandwidth. We use τu = 190 and
+τd = 190 when evaluating UL and DL, respectively.
+A. Uplink
+Fig. 5 shows the cumulative distribution function (CDF) of
+the UL SE per UE. We compare the proposed scalable central-
+ized P-MMSE and distributed LP-MMSE schemes with three
+benchmarks where all APs serve all UEs: optimal centralized
+MMSE combining in (20) from [7], [30], distributed L-MMSE
+combining from [7], and conventional MR from the original
+paper [5] on the topic. These three are marked with “(All)” and
+we stress that none of these benchmarks is scalable, according
+to Deﬁnition 1. The ﬁrst observation is that the proposed
+distributed LP-MMSE performs very well; the average SE
+is 2.7× higher than with MR and the performance loss
+compared to L-MMSE is negligible. When it comes to the two
+centralized schemes, the proposed scalable P-MMSE achieves
+89% of the average SE with optimal MMSE combining. The
+performance loss comes from two factors: limiting the number
+of APs that serves each UE and using the proposed scalable,
+but suboptimal, algorithm for cluster formation. Since the loss
+is small, the price to pay for scalability is also small and the
+algorithm performs well. The intuition is that the few closest
+APs receive the vast majority of the total received power
+for a given UE, and these are the APs that our clustering
+algorithm selects to serve that UE. It is thus sufﬁcient to
+suppress interference between the UEs that these APs are co-
+serving.
+
+
+================================================================================
+PAGE 12 OF 14
+================================================================================
+
+12
+0
+2
+4
+6
+8
+10
+0
+0.2
+0.4
+0.6
+0.8
+1
+(a) L = 400 APs with N = 1 antenna.
+0
+2
+4
+6
+8
+10
+0
+0.2
+0.4
+0.6
+0.8
+1
+(b) L = 100 APs with N = 4 antennas.
+Fig. 5. UL SE per UE with different scalable and non-scalable
+“(All)” combining schemes.
+When comparing the two setups (L = 400, N = 1 and
+L = 100, N = 4), we notice that it is preferable to have many
+single-antenna APs. The UEs with the lowest SEs beneﬁt the
+most from having many APs, while the most fortunate UEs
+achieve roughly the same SE when having fewer multi-antenna
+APs, thanks to the more capable local interference mitigation
+at the APs.
+B. Downlink
+Since we have established that the proposed scalable
+Cell-Free Massive MIMO provides very competitive perfor-
+mance, the DL simulations will focus on two other aspects:
+interference-limited operation and tightness of the capacity
+lower bounds.
+Fig. 6 shows the CDF of the DL SE per UE for the
+two setups (L = 400, N = 1 and L = 100, N = 4).
+We compare three scalable precoding solutions: centralized
+P-MMSE, distributed LP-MMSE, and distributed MR (i.e., a
+combination of conventional MR with the proposed scalable
+clustering). The power allocation is selected as described in
+Section V-D, where the centralized scheme limits its power
+to guarantee that all APs satisfy their power constraints. As a
+consequence, the distributed precoding schemes use 40 times
+more transmit power, but anyway give lower SEs in Fig. 6.
+0
+2
+4
+6
+8
+10
+0
+0.2
+0.4
+0.6
+0.8
+1
+(a) L = 400 APs with N = 1 antenna.
+0
+2
+4
+6
+8
+10
+0
+0.2
+0.4
+0.6
+0.8
+1
+(b) L = 100 APs with N = 4 antennas.
+Fig. 6. DL SE per UE with different scalable precoding
+schemes.
+The reason is that the cell-free system is interference-limited,
+so the spatial interference mitigation enabled by centralized
+precoding is very beneﬁcial. The performance gap between
+P-MMSE and LP-MMSE is large in Fig. 6(a), but shrinks
+in Fig. 6(b) where each AP has N = 4 antennas and thus
+can spatially suppress its interference. The different power
+allocation is also a reason for the performance gap.
+Among the distributed schemes, LP-MMSE outperforms
+MR for 95% of the UEs and gives comparable SE for the
+5% most unfortunate UEs. A partial reason for this result is
+the different channel gain distributions that were illustrated in
+Fig. 4, where we recall that MR has much larger variations
+and therefore poorer tightness of the capacity bound in Propo-
+sition 3. To verify this, we computed the SE in a genie-aided
+case where the UEs have perfect CSI. In the setup with N = 1,
+the average SE with LP-MMSE is 90% of the genie-aided
+case, while MR only achieves 60%. The latter leads to limited
+channel hardening, as previously noted in [47], and calls for
+alternative methods for DL channel estimation. However, a
+more convenient solution is to use LP-MMSE precoding, for
+which Proposition 3 is a tight capacity bound. Finally, we
+notice that P-MMSE achieved 98% of the genie-aided case.
+
+
+================================================================================
+PAGE 13 OF 14
+================================================================================
+
+13
+VII. CONCLUSIONS
+This paper developed a new framework for scalable Cell-
+Free Massive MIMO systems, where the complexity and
+signaling at each AP is ﬁnite even when the number of UEs
+goes to inﬁnity. To achieve this, we exploited concepts from
+the DCC framework previously used in the Network MIMO
+literature. We developed new scalable algorithms for initial
+access, pilot assignment, cooperation cluster formation, and
+both centralized and distributed signal processing for receive
+combining and transmit precoding. We demonstrated that MR
+(conjugate beamforming) is outperformed by the proposed dis-
+tributed LP-MMSE combining/precoding, which in turn is out-
+performed by the centralized P-MMSE combining/precoding.
+Importantly, for a given power allocation policy, the scalability
+can be achieved with a negligible performance loss. The reason
+is that each UE receives most of its power from a small subset
+of the APs, due to the large pathloss variations, and this subset
+is identiﬁed by the proposed algorithms. When the proposed
+precoding is used, the downlink capacity bounds are tight in
+cell-free networks, thus the tightness issue observed in [47] is
+mainly a problem for MR precoding.
+While the proposed methods are nearly optimal, one aspect
+was not considered in detail: power allocation for central-
+ized and distributed operation. Although there are plenty of
+scalable, heuristic algorithms, it is unknown how well they
+perform compared to centralized optimization.
+APPENDIX
+Let γk = SINR(ul,2)
+k
+denote the value of the effective SINR
+in (28) for the UL powers {pi : ∀i} and combiners {vi : ∀i}.
+We want to show that γk = SINR(dl)
+k
+is achievable in the DL
+when (36) is satisﬁed for all i. Plugging (36) into (35) yields
+the following SINR constraints:
+γk =
+ρk
+E
+
+hH
+k Dkvk
+√
+E{∥vk∥2}
+ 
+2
+K
+P
+i=1
+ρiE
+
+hH
+k Divi
+√
+E{∥vi∥2}
+
+2
+−ρk
+E
+
+hH
+k Dkvk
+√
+E{∥vk∥2}
+ 
+2
++ σ2
+dl
+.
+(44)
+We call Γ ∈CK×K a diagonal matrix with the kth diagonal
+element being
+[Γ]kk = 1
+γk
+E
+(
+h
+H
+kDk
+vk
+p
+E{vH
+kDkvk}
+) 
+2
+(45)
+and let Σ ∈CK×K be the matrix whose (i, k)th element is
+[Σ]ki = E
+h
+H
+kDi
+vi
+p
+E{vH
+i Divi}
+
+2
+−
+(
+0
+i ̸= k
+γk[Γ]kk
+i = k.
+(46)
+Therefore, we may rewrite (44) as
+[Γ]−1
+kk = ρk/(
+K
+X
+i=1
+ρi[Σ]ki + σ2
+dl)
+(47)
+from which we obtain σ2
+dl = ρk[Γ]kk −PK
+i=1 ρi[Σ]ki. The
+K constraints can be written in matrix form as 1Kσ2
+dl =
+(Γ −Σ) ρ with ρ = [ρ1, . . . , ρK]T being the downlink trans-
+mit power vector. The SINR constraints are thus satisﬁed if
+ρ = (Γ −Σ)−1 1Kσ2
+dl.
+(48)
+This is a feasible power if Γ −Σ is invertible, which always
+holds when p is feasible. To show this, we notice that the
+K UL SINR conditions can be expressed in a similar form
+where Σ is replaced by Σ
+T such that p = (Γ −Σ
+T)−1 1Kσ2
+ul.
+Since the eigenvalues of Γ −Σ and Γ −Σ
+T are the same and
+the UL SINR conditions are satisﬁed by assumption, we can
+always select the DL powers according to (48). Substituting
+1K =
+1
+σ2
+ul (Γ −Σ
+T) p into (48) yields
+ρ = σ2
+dl
+σ2
+ul
+(Γ −Σ)−1 (Γ −Σ
+T) p.
+(49)
+The total transmit power condition now follows from direct
+computation.
+REFERENCES
+[1] E. Björnson and L. Sanguinetti, “A new look at cell-free Massive
+MIMO: Making it practical with dynamic cooperation,” in Proc. IEEE
+International Symposium on Personal, Indoor and Mobile Radio Com-
+munications (PIMRC), 2019.
+[2] E. Björnson, J. Hoydis, and L. Sanguinetti, “Massive MIMO networks:
+Spectral, energy, and hardware efﬁciency,” Foundations and Trends R⃝
+in Signal Processing, vol. 11, no. 3-4, pp. 154–655, 2017.
+[3] S. Shamai and B. M. Zaidel, “Enhancing the cellular downlink capacity
+via co-processing at the transmitting end,” in IEEE Vehicular Technology
+Conference (VTC Spring), vol. 3, 2001, pp. 1745–1749.
+[4] S. Venkatesan, A. Lozano, and R. Valenzuela, “Network MIMO: Over-
+coming intercell interference in indoor wireless systems,” in Asilomar
+Conference on Signals, Systems and Computers, 2007, pp. 83–87.
+[5] H. Q. Ngo, A. Ashikhmin, H. Yang, E. G. Larsson, and T. L. Marzetta,
+“Cell-free Massive MIMO versus small cells,” IEEE Trans. Wireless
+Commun., vol. 16, no. 3, pp. 1834–1850, 2017.
+[6] E. Nayebi, A. Ashikhmin, T. L. Marzetta, H. Yang, and B. D. Rao, “Pre-
+coding and power optimization in cell-free Massive MIMO systems,”
+IEEE Trans. Wireless Commun., vol. 16, no. 7, 2017.
+[7] E. Björnson and L. Sanguinetti, “Making cell-free massive MIMO
+competitive with MMSE processing and centralized implementation,”
+IEEE Trans. Wireless Commun., vol. 19, no. 1, pp. 77–90, 2020.
+[8] D. Gesbert, S. Hanly, H. Huang, S. Shamai, O. Simeone, and W. Yu,
+“Multi-cell MIMO cooperative networks: A new look at interference,”
+IEEE J. Sel. Areas Commun., vol. 28, no. 9, pp. 1380–1408, 2010.
+[9] E. Björnson, R. Zakhour, D. Gesbert, and B. Ottersten, “Cooperative
+multicell precoding: Rate region characterization and distributed strate-
+gies with instantaneous and statistical CSI,” IEEE Trans. Signal Process.,
+vol. 58, no. 8, pp. 4298–4310, 2010.
+[10] E. Björnson and E. Jorswieck, “Optimal resource allocation in coordi-
+nated multi-cell systems,” Foundations and Trends R⃝in Communica-
+tions and Information Theory, vol. 9, no. 2-3, pp. 113–381, 2013.
+[11] P. Marsch and G. Fettweis, “On multicell cooperative transmission in
+backhaul-constrained cellular systems,” Ann. Telecommun., vol. 63, pp.
+253–269, 2008.
+[12] J. Zhang, R. Chen, J. G. Andrews, A. Ghosh, and R. Heath, “Networked
+MIMO with clustered linear precoding,” IEEE Trans. Wireless Commun.,
+vol. 8, no. 4, pp. 1910–1921, 2009.
+[13] H. Huang, M. Trivellato, A. Hottinen, M. Shaﬁ, P. Smith, and R. Valen-
+zuela, “Increasing downlink cellular throughput with limited network
+MIMO coordination,” IEEE Trans. Wireless Commun., vol. 8, no. 6, pp.
+2983–2989, 2009.
+[14] A. Osseiran, J. F. Monserrat, and P. Marsch, 5G Mobile and Wireless
+Communications Technology. Cambridge: Cambridge University Press,
+2016, ch. 9, Coordinated Multi-Point Transmission in 5G.
+[15] I. D. Garcia, N. Kusashima, K. Sakaguchi, and K. Araki, “Dynamic
+cooperation set clustering on base station cooperation cellular networks,”
+in IEEE PIMRC, 2010, pp. 2127–2132.
+
+
+================================================================================
+PAGE 14 OF 14
+================================================================================
+
+14
+[16] A. Tölli, M. Codreanu, and M. Juntti, “Cooperative MIMO-OFDM
+cellular system with soft handover between distributed base station
+antennas,” IEEE Trans. Wireless Commun., vol. 7, no. 4, pp. 1428–1440,
+2008.
+[17] E. Björnson, N. Jaldén, M. Bengtsson, and B. Ottersten, “Optimality
+properties, distributed strategies, and measurement-based evaluation
+of coordinated multicell OFDMA transmission,” IEEE Trans. Signal
+Process., vol. 59, no. 12, pp. 6086–6101, 2011.
+[18] S. Kaviani, O. Simeone, W. Krzymien, and S. Shamai, “Linear precoding
+and equalization for network MIMO with partial cooperation,” IEEE
+Trans. Veh. Technol., vol. 61, no. 5, pp. 2083–2095, 2012.
+[19] A. Papadogiannis, D. Gesbert, and E. Hardouin, “A dynamic clustering
+approach in wireless networks with multi-cell cooperative processing,”
+in IEEE International Conference on Communication (ICC), 2008.
+[20] V. Jungnickel, K. Manolakis, W. Zirwas, B. Panzner, V. Braun, M. Los-
+sow, M. Sternad, R. Apelfrojd, and T. Svensson, “The role of small cells,
+coordinated multipoint, and massive MIMO in 5G,” IEEE Commun.
+Mag., vol. 52, no. 5, pp. 44–51, 2014.
+[21] S. Perlman and A. Forenza, “An introduction to pCell,” 2015, Artemis
+Networks LLC, White paper. [Online]. Available: http://www.rearden.
+com/artemis/An-Introduction-to-pCell-White-Paper-150224.pdf
+[22] T. L. Marzetta, “Noncooperative cellular wireless with unlimited num-
+bers of base station antennas,” IEEE Trans. Wireless Commun., vol. 9,
+no. 11, pp. 3590–3600, 2010.
+[23] L. Sanguinetti, E. Björnson, and J. Hoydis, “Towards massive MIMO
+2.0: Understanding spatial correlation, interference suppression, and
+pilot contamination,” IEEE Trans. Commun., vol. 68, no. 1, pp. 232–257,
+2020.
+[24] E. Björnson, L. V. der Perre, S. Buzzi, and E. G. Larsson, “Massive
+MIMO in sub-6 GHz and mmWave: Physical, practical, and use-case
+differences,” IEEE Wireless Commun., vol. 26, pp. 100–108, 2019.
+[25] S. Parkvall, E. Dahlman, A. Furuskär, and M. Frenne, “NR: The new 5G
+radio access technology,” IEEE Communications Standards Magazine,
+vol. 1, no. 4, pp. 24–30, 2017.
+[26] J. Zhang, Y. Wei, E. Björnson, Y. Han, and S. Jin, “Performance analysis
+and power control of cell-free massive MIMO systems with hardware
+impairments,” IEEE Access, vol. 6, pp. 55 302–55 314, 2018.
+[27] S. Buzzi and C. D’Andrea, “Cell-free massive MIMO: User-centric
+approach,” IEEE Commun. Lett., vol. 6, no. 6, pp. 706–709, 2017.
+[28] H. Q. Ngo, L. Tran, T. Q. Duong, M. Matthaiou, and E. G. Larsson,
+“On the total energy efﬁciency of cell-free massive MIMO,” IEEE Trans.
+Green Commun. Net., vol. 2, no. 1, pp. 25–39, 2018.
+[29] O. Y. Bursalioglu, G. Caire, R. K. Mungara, H. C. Papadopoulos,
+and C. Wang, “Fog massive MIMO: A user-centric seamless hot-spot
+architecture,” IEEE Trans. Wireless Commun., vol. 18, no. 1, pp. 559–
+574, 2019.
+[30] E. Nayebi, A. Ashikhmin, T. L. Marzetta, and B. D. Rao, “Performance
+of cell-free massive MIMO systems with MMSE and LSFD receivers,”
+in Asilomar Conference on Signals, Systems and Computers, 2016.
+[31] M. Bashar, K. Cumanan, A. G. Burr, M. Debbah, and H. Q. Ngo, “On
+the uplink max-min SINR of cell-free massive MIMO systems,” IEEE
+Trans. Wireless Commun., vol. 18, no. 4, pp. 2021–2036, 2019.
+[32] D. Gesbert, S. Kiani, A. Gjendemsjø, and G. Øien, “Adaptation, co-
+ordination, and distributed resource allocation in interference-limited
+wireless networks,” Proc. IEEE, vol. 95, no. 12, pp. 2393–2409, 2007.
+[33] G. Interdonato, P. Frenger, and E. G. Larsson, “Scalability aspects
+of cell-free massive MIMO,” in IEEE International Conference on
+Communication (ICC), 2019.
+[34] R. Nikbakht and A. Lozano, “Uplink fractional power control for cell-
+free wireless networks,” in IEEE International Conference on Commu-
+nication (ICC), 2019.
+[35] A. G. Burr, M. Bashar, and D. Maryopi, “Ultra-dense radio access
+networks for smart cities: Cloud-RAN, fog-RAN and “cell-free” massive
+MIMO,” in PIMRC, International Workshop of CorNer, 2018.
+[36] E. Björnson, L. Sanguinetti, and M. Debbah, “Massive MIMO with
+imperfect channel covariance information,” in Asilomar Conference on
+Signals, Systems and Computers, Nov 2016, pp. 974–978.
+[37] D. Neumann, M. Joham, and W. Utschick, “Covariance matrix estima-
+tion in massive MIMO,” IEEE Signal Processing Letters, vol. 25, no. 6,
+pp. 863–867, June 2018.
+[38] K. Upadhya and S. A. Vorobyov, “Covariance matrix estimation for
+massive MIMO,” IEEE Signal Processing Letters, vol. 25, no. 4, pp.
+546–550, April 2018.
+[39] S. Haghighatshoar and G. Caire, “Massive MIMO pilot decontamination
+and channel interpolation via wideband sparse channel estimation,” IEEE
+Transactions on Wireless Communications, vol. 16, no. 12, pp. 8316–
+8332, Dec 2017.
+[40] H. Yin, L. Cottatellucci, D. Gesbert, R. R. Müller, and G. He, “Robust
+pilot decontamination based on joint angle and power domain discrim-
+ination,” IEEE Trans. Signal Process., vol. 64, no. 11, pp. 2990–3003,
+2016.
+[41] E. Björnson, J. Hoydis, and L. Sanguinetti, “Massive MIMO has
+unlimited capacity,” IEEE Trans. Wireless Commun., vol. 17, no. 1, pp.
+574–590, Jan. 2018.
+[42] S. Sesia, I. Touﬁk, and M. Baker, LTE - the UMTS long term evolution:
+from theory to practice.
+Chichester: Wiley, 2009. [Online]. Available:
+http://opac.inria.fr/record=b1130916
+[43] L. Sanguinetti and M. Morelli, “An initial ranging scheme for the IEEE
+802.16 OFDMA uplink,” IEEE Trans. Wireless Commun., vol. 11, no. 9,
+pp. 3204–3215, Sept. 2012.
+[44] L. Sanguinetti, M. Morelli, and L. Marchetti, “A random access algo-
+rithm for LTE systems,” Trans. Emerging Telecommun. Technol., vol. 24,
+no. 1, 2013.
+[45] I. Estella Aguerri, A. Zaidi, G. Caire, and S. Shamai Shitz, “On the
+capacity of cloud radio access networks with oblivious relaying,” IEEE
+Trans. Inf. Theory, vol. 65, no. 7, pp. 4575–4596, 2019.
+[46] E. Biglieri, J. Proakis, and S. Shamai, “Fading channels: Information-
+theoretic and communications aspects,” IEEE Trans. Inf. Theory, vol. 44,
+no. 6, pp. 2619–2691, 1998.
+[47] Z. Chen and E. Björnson, “Channel hardening and favorable propagation
+in cell-free massive MIMO with stochastic geometry,” IEEE Trans.
+Commun., vol. 17, no. 11, pp. 5205–5219, 2018.
+[48] M. Bashar, H. Q. Ngo, A. G. Burr, D. Maryopi, K. Cumanan, and
+E. G. Larsson, “On the performance of backhaul constrained cell-
+free massive MIMO with linear receivers,” in Asilomar Conference on
+Signals, Systems and Computers, Nov. 2018.
+[49] W. Yu and T. Lan, “Transmitter optimization for the multi-antenna
+downlink with per-antenna power constraints,” IEEE Trans. Signal
+Process., vol. 55, no. 6, pp. 2646–2660, June 2007.
+[50] H. Boche and M. Schubert, “A general duality theory for uplink and
+downlink beamforming,” in IEEE VTC-Fall, 2002, pp. 87–91.
+[51] P. Viswanath and D. N. C. Tse, “Sum capacity of the vector Gaussian
+broadcast channel and uplink-downlink duality,” IEEE Trans. Inf. The-
+ory, vol. 49, no. 8, pp. 1912–1921, 2003.
+[52] E. Björnson, E. G. Larsson, and M. Debbah, “Massive MIMO for
+maximal spectral efﬁciency: How many users and pilots should be
+allocated?” IEEE Trans. Wireless Commun., vol. 15, no. 2, pp. 1293–
+1308, 2016.
+[53] J. Hoydis, S. ten Brink, and M. Debbah, “Massive MIMO in the UL/DL
+of cellular networks: How many antennas do we need?” IEEE J. Sel.
+Areas Commun., vol. 31, no. 2, pp. 160–171, Feb. 2013.
+[54] H. Q. Ngo, E. G. Larsson, and T. L. Marzetta, “Energy and spectral efﬁ-
+ciency of very large multiuser MIMO systems,” IEEE Trans. Commun.,
+vol. 61, no. 4, pp. 1436–1449, 2013.
+[55] C. I, J. Huang, R. Duan, C. Cui, J. Jiang, and L. Li, “Recent progress
+on C-RAN centralization and cloudiﬁcation,” IEEE Access, vol. 2, pp.
+1030–1039, 2014.
+[56] M. Peng, Y. Sun, X. Li, Z. Mao, and C. Wang, “Recent advances in
+cloud radio access networks: System architectures, key techniques, and
+open issues,” IEEE Communications Surveys Tutorials, vol. 18, no. 3,
+pp. 2282–2308, 2016.
