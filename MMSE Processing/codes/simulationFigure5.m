@@ -44,7 +44,8 @@ sumSE_L1_all = zeros(nbrOfSetups, 1);
 
 %% Main loop
 for s = 1:nbrOfSetups
-    fprintf('Setup %d/%d...\n', s, nbrOfSetups);
+    fprintf('[Fig5] Setup %d/%d -- realizations done: %d/%d\n', ...
+        s, nbrOfSetups, (s-1)*nbrOfRealizations, nbrOfSetups*nbrOfRealizations);
 
     [R_AP, ~, ~, ~, pilotIndex, ~, ~, ~] = ...
         generateSetup(L, K, N, tau_p, nbrOfBSs, M);

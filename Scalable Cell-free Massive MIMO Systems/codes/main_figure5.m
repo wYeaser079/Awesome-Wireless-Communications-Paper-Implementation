@@ -32,8 +32,8 @@ tau_p = 10;         % Pilot sequence length
 p = 100; % 100 mW (raw value, noise normalization is in R)
 
 % Simulation averaging
-nbrOfSetups = 25;         % Number of random network layouts
-nbrOfRealizations = 1000; % Channel realizations per setup
+nbrOfSetups = 3;         % Number of random network layouts
+nbrOfRealizations = 50; % Channel realizations per setup
 
 % NOTE: For faster testing, use nbrOfSetups = 5 and nbrOfRealizations = 100
 

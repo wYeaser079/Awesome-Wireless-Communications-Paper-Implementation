@@ -44,9 +44,8 @@ SE_L2_LMMSE_all = [];
 
 %% Main simulation loop
 for s = 1:nbrOfSetups
-    if mod(s, 10) == 0
-        fprintf('Setup %d/%d...\n', s, nbrOfSetups);
-    end
+    fprintf('[Fig4-fullpower] Setup %d/%d -- realizations done: %d/%d\n', ...
+        s, nbrOfSetups, (s-1)*nbrOfRealizations, nbrOfSetups*nbrOfRealizations);
 
     % Generate setup with three-slope model
     [gainOverNoisedB, pilotIndex, APpositions, UEpositions] = ...
@@ -102,10 +101,10 @@ fprintf('\nComputing max-min power control...\n');
 
 SE_L2_MR_maxmin_all = [];
 
-for s = 1:min(nbrOfSetups, 50)  % Fewer setups for power optimization
-    if mod(s, 10) == 0
-        fprintf('Power opt setup %d...\n', s);
-    end
+nbrMaxminSetups = min(nbrOfSetups, 50);
+for s = 1:nbrMaxminSetups  % Fewer setups for power optimization
+    fprintf('[Fig4-maxmin] Setup %d/%d -- realizations done: %d/%d\n', ...
+        s, nbrMaxminSetups, (s-1)*nbrOfRealizations, nbrMaxminSetups*nbrOfRealizations);
 
     [gainOverNoisedB, pilotIndex, ~, ~] = generateSetup_threeslope(L, K, tau_p);
 

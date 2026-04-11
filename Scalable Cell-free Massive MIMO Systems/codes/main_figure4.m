@@ -26,8 +26,8 @@ tau_p = 10;
 p = 100;     % UL power: 100 mW per UE
 rho = 1000;  % DL power: 1 W = 1000 mW per AP
 
-nbrOfSetups = 10;        % Fewer setups for this figure
-nbrOfRealizations = 1000;
+nbrOfSetups = 3;        % Fewer setups for this figure
+nbrOfRealizations = 50;
 
 %% Collect normalized channel gain samples for both setups
 for setupIdx = 1:2

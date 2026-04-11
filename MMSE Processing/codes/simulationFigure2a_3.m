@@ -41,7 +41,8 @@ SE_cellular_MMMSE_all = zeros(K, nbrOfSetups);
 
 %% Main simulation loop
 for s = 1:nbrOfSetups
-    fprintf('Setup %d/%d...\n', s, nbrOfSetups);
+    fprintf('[Fig2a3] Setup %d/%d -- realizations done: %d/%d\n', ...
+        s, nbrOfSetups, (s-1)*nbrOfRealizations, nbrOfSetups*nbrOfRealizations);
 
     % Generate network topology and channel statistics
     [R_AP, R_BS, gainOverNoisedB_AP, gainOverNoisedB_BS, ...

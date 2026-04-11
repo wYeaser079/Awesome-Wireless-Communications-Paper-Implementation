@@ -35,7 +35,8 @@ SE_cellular_MMMSE_all = zeros(K, nbrOfSetups);
 
 %% Main loop
 for s = 1:nbrOfSetups
-    fprintf('Setup %d/%d...\n', s, nbrOfSetups);
+    fprintf('[Fig2b] Setup %d/%d -- realizations done: %d/%d\n', ...
+        s, nbrOfSetups, (s-1)*nbrOfRealizations, nbrOfSetups*nbrOfRealizations);
 
     [R_AP, R_BS, gainOverNoisedB_AP, gainOverNoisedB_BS, ...
         pilotIndex, APpositions, BSpositions, UEpositions] = ...

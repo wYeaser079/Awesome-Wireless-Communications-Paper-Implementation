@@ -29,8 +29,8 @@ p = 100;     % UL power: 100 mW per UE
 rho = 1000;  % DL power: 1 W = 1000 mW per AP
 
 % Simulation averaging
-nbrOfSetups = 25;
-nbrOfRealizations = 1000;
+nbrOfSetups = 3;
+nbrOfRealizations = 50;
 
 %% Run simulations for both setups
 for setupIdx = 1:2
