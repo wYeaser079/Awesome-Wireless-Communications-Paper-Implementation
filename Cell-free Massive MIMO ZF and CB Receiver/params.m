@@ -29,7 +29,7 @@ function p = params()
     p.bandwidth_MHz   = 20;     % System bandwidth [MHz]
     kT_dBm_per_Hz = -174;       % Thermal noise floor [dBm/Hz] at T=290K
     p.noise_dBm = kT_dBm_per_Hz + 10*log10(p.bandwidth_MHz * 1e6) ...
-                  + p.noise_figure_dB;   % â‰ˆ -92 dBm
+                  + p.noise_figure_dB;   % ÿ -92 dBm
 
     % Normalized SNR = transmit_power / noise_power (linear scale)
     noise_mW  = 10^(p.noise_dBm / 10);       % Noise in mW

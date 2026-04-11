@@ -1,4 +1,4 @@
-% main_fig5.m â€” Reproduce Figure 5: SCA convergence
+% main_fig5.m ÿ Reproduce Figure 5: SCA convergence
 %
 % Paper: Zhang et al. (JCN, 2019), Section IV, Figure 5
 %
@@ -63,9 +63,9 @@ legend('ZF (Algorithm 1)', 'CB (Algorithm 3)', 'Location', 'southeast');
 
 % --- Summary ---
 fprintf('\n--- Convergence Summary ---\n');
-fprintf('ZF: EPC = %.2f â†’ SCA = %.2f  (gain = %.1f%%)\n', ...
+fprintf('ZF: EPC = %.2f ÿ SCA = %.2f  (gain = %.1f%%)\n', ...
     avg_ZF(1), avg_ZF(end), 100*(avg_ZF(end)/avg_ZF(1) - 1));
-fprintf('CB: EPC = %.2f â†’ SCA = %.2f  (gain = %.1f%%)\n', ...
+fprintf('CB: EPC = %.2f ÿ SCA = %.2f  (gain = %.1f%%)\n', ...
     avg_CB(1), avg_CB(end), 100*(avg_CB(end)/avg_CB(1) - 1));
 
 
